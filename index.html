@@ -116,12 +116,11 @@ function finish(kind,complete,all){
  if(kind==="public"){title="АДРЕС ВОЗВРАЩЁН";text=complete&&all?"Ты вписываешь Яну и Соню в общий реестр. Через месяц к дому приходят не чиновники, а люди с фотографиями и копиями старых писем. Список не возвращает прожитые годы. Но теперь никто не может назвать их выдумкой.\n\nВ новой графе ты оставляешь пустое место после фамилии: не для ошибки — для тех, кого ещё не нашли.":"Ты публикуешь список. В нём есть имена, но не хватает дат и свидетельств. Город впервые спорит о доме 17. Это не справедливость, но спор уже нельзя закрыть одной подписью."}
  else if(kind==="private"){title="ТИХАЯ КОПИЯ";text=complete?"Ты переписываешь адреса в тетрадь без обложки и прячешь её под половицей. На следующий вечер возле архива ждёт женщина с мокрым конвертом. Она не спрашивает, веришь ли ты ей. Она называет фамилии по порядку.":"Ты сохраняешь несколько имён, но часть листов остаётся пустой. Человек, который найдёт тетрадь, не узнает, почему ты выбрала именно их."}
  else{title="НЕЗАКРЫТОЕ ДЕЛО";text=all?"Ты не подписываешь бумагу. Ничего не стираешь и ничего не подтверждаешь. Утром в архиве остаётся дело, которое нельзя подшить ни к живым, ни к пропавшим. Яна однажды сможет найти этот след — если будет искать.":"Ты отказываешься поставить подпись. Бумагу забирают вместе с остальными делами. В реестре остаётся ноль. Но ты впервые понимаешь: молчание тоже может быть чьим-то решением."}
- showModal("ДОМ 17 · "+(complete?"СВИДЕТЕЛЬСТВА СОБРАНЫ":"НЕ ВСЕ СЛЕДЫ НАЙДЕНЫ"),title,text+"\\n\\nКОНЕЦ",null,[{text:"ЗАКРЫТЬ",primary:true,run:function(){hideModal();subtitle("АРХИВ","Ночная смена окончена.",6000)}}]);playSound("ending");
+ showModal("ДОМ 17 · "+(complete?"СВИДЕТЕЛЬСТВА СОБРАНЫ":"НЕ ВСЕ СЛЕДЫ НАЙДЕНЫ"),title,text+"\n\nКОНЕЦ",null,[{text:"ЗАКРЫТЬ",primary:true,run:function(){hideModal();subtitle("АРХИВ","Ночная смена окончена.",6000)}}]);playSound("ending");
 }
-function finishChapterGate(z){if(z===0&&!st.flags.observed)return "Сначала посмотри на окна во дворе. Между огнями есть ритм.";if(z===1&&!st.flags.dateFound)return "Письмо и список лежат рядом. Даты должны сойтись.";if(z===2&&!st.flags.lineRestored)return "Линия не соединена. Вспомни порядок на крышке коммутатора.";if(z===3&&!st.flags.valve)return "Клапан ждёт ритм из трубы.";return null}
-function interact(obj){
- if(!obj)return;
- if(obj.id==="desk"){story("desk");return}
+function finishChapterGate(z){if(z===0&&!st.flags.observed)return "Сначала посмотри на окна во дворе. Между огнями есть ритм.";if(z===1&&!st.flags.letter)return "Письмо под дверью ещё не прочитано.";if(z===2&&!st.flags.lineRestored)return "Линия не соединена. Вспомни порядок на крышке коммутатора.";if(z===3&&!st.flags.valve)return "Клапан ждёт ритм из трубы.";return null}
+function interact(obj){if(!obj)obj=near;if(!obj){subtitle("АРХИВАРИУС","Осмотрись. Предметы рядом можно изучить клавишей E.",3500);return;}
+ if(obj.id==="desk"){if(!st.flags.windowSeen){subtitle("АРХИВАРИУС","Сначала посмотри на окна во дворе. Их огни складываются в знак.",4200);return}if(!st.flags.observed){puzzle("observation");return}story("desk");return}
  if(obj.id==="window"&&Math.floor(st.x/ROOM)===0){story("window");return}
  if(obj.id==="clock"){story("clock");return}
  if(obj.id==="phone"){story("phone");return}
@@ -129,7 +128,7 @@ function interact(obj){
  if(obj.id==="door"){story("door");return}
  if(obj.id==="shoes"){story("shoes");return}
  if(obj.id==="lift"){if(!st.flags.dateFound){subtitle("АРХИВАРИУС","Кнопки не отвечают. Сначала сверить письмо со списком.",5000);playSound("wrong");return}story("lift");return}
- if(obj.id==="list"){story("list");return}
+ if(obj.id==="list"){if(!st.flags.list){story("list");return}if(!st.flags.dateFound){puzzle("registry");return}story("list");return}
  if(obj.id==="board"){if(!st.flags.letter||!st.flags.list){subtitle("АРХИВАРИУС","Нужны письмо и реестр. Коммутатор не соединяет догадки.",5000);return}if(!st.flags.lineRestored){puzzle("switch");return}story("board");return}
  if(obj.id==="tape"){story("tape");return}
  if(obj.id==="pipes"){story("pipes");return}
@@ -266,7 +265,7 @@ document.addEventListener("fullscreenchange",function(){$("fullBtn").textContent
 window.addEventListener("keydown",function(e){var k=e.key;if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(k)>=0)e.preventDefault();if(k==="Escape"){if($("modal").classList.contains("show"))hideModal();else pause();return}if((k==="e"||k==="E"||k===" ")&&!$("modal").classList.contains("show")){interact();return}keys[k]=true});
 window.addEventListener("keyup",function(e){keys[e.key]=false});
 window.addEventListener("blur",function(){keys={}});
-$("game").addEventListener("pointerdown",function(e){if(!st.started||!$("modal").classList.contains("show"))return;var rect=canvas.getBoundingClientRect(),cx=(e.clientX-rect.left)/rect.width*W,wx=cx+camera;var a=rooms[Math.floor(st.x/ROOM)],best=null,bd=50;a.forEach(function(o){var d=Math.hypot(o.x-wx,o.y-st.y);if(d<bd){best=o;bd=d}});if(best){st.x=best.x;st.y=best.y;nearest();interact(best)}});
+$("game").addEventListener("pointerdown",function(e){if(!st.started||$("modal").classList.contains("show"))return;var rect=canvas.getBoundingClientRect(),cx=(e.clientX-rect.left)/rect.width*W,wx=cx+camera;var a=rooms[Math.floor(st.x/ROOM)],best=null,bd=50;a.forEach(function(o){var d=Math.hypot(o.x-wx,o.y-st.y);if(d<bd){best=o;bd=d}});if(best){st.x=best.x;st.y=best.y;nearest();interact(best)}});
 document.querySelectorAll("#touch button").forEach(function(b){var k=b.dataset.key;b.onpointerdown=function(e){e.preventDefault();if(k==="e")interact();else keys[k]=true};["pointerup","pointercancel","pointerleave"].forEach(function(v){b.addEventListener(v,function(){keys[k]=false})})});
 var restored=load();if(restored){st=restored;if(st.started){$("start").classList.remove("show");$("soundBtn").textContent="ЗВУК: "+(st.sound?"ВКЛ":"ВЫКЛ");if(st.finished){subtitle("АРХИВАРИУС","Ночная смена окончена. Нажми Esc, чтобы начать заново.",5000)}requestAnimationFrame(render)}}
 requestAnimationFrame(render);
