@@ -291,7 +291,7 @@ function render(now){
  // area darkening, flicker
  var flick=.02+Math.max(0,Math.sin(elapsed*.0043))*((pz===0||pz===2)?.045:.025);ctx.fillStyle="rgba(0,0,0,"+flick+")";ctx.fillRect(0,0,W,H);
  // soundless silhouette changes when player looks away from landing
- if(st.flags.lineRestored&&pz===1&&st.x%ROOM<190)st.flags.silhouetteGone=true;
+ if(st.flags.lineRestored&&pz===1&&st.x%ROOM>ROOM-100)st.flags.silhouetteGone=true;
  nearest();requestAnimationFrame(render)
 }
 function nearest(){near=null;if(!st.started||!$("modal").classList.contains("show")){var arr=rooms[Math.max(0,Math.min(COUNT-1,Math.floor(st.x/ROOM)))];var bd=43;arr.forEach(function(o){var d=Math.hypot(o.x-st.x,o.y-st.y);if(d<bd){near=o;bd=d}})}if(near){$("prompt").textContent="E  ·  "+near.label;$("prompt").classList.add("show")}else $("prompt").classList.remove("show")}
@@ -341,7 +341,7 @@ window.addEventListener("keyup",function(e){keys[e.key]=false});
 window.addEventListener("blur",function(){keys={}});
 $("game").addEventListener("pointerdown",function(e){if(!st.started||$("modal").classList.contains("show"))return;var rect=canvas.getBoundingClientRect(),cx=(e.clientX-rect.left)/rect.width*W,wx=cx+camera;var a=rooms[Math.floor(st.x/ROOM)],best=null,bd=50;a.forEach(function(o){var d=Math.hypot(o.x-wx,o.y-st.y);if(d<bd){best=o;bd=d}});if(best){st.x=best.x;st.y=best.y;nearest();interact(best)}});
 document.querySelectorAll("#touch button").forEach(function(b){var k=b.dataset.key;b.onpointerdown=function(e){e.preventDefault();if(k==="e")interact();else keys[k]=true};["pointerup","pointercancel","pointerleave"].forEach(function(v){b.addEventListener(v,function(){keys[k]=false})})});
-var restored=load();if(restored){st=restored;if(st.started){$("start").classList.remove("show");$("soundBtn").textContent="ЗВУК: "+(st.sound?"ВКЛ":"ВЫКЛ");if(st.finished){subtitle("АРХИВАРИУС","Ночная смена окончена. Нажми Esc, чтобы начать заново.",5000)}requestAnimationFrame(render)}}
+var restored=load();if(restored){st=restored;if(st.started){$("start").classList.remove("show");st.sound=false;$("soundBtn").textContent="ЗВУК: ВЫКЛ";if(st.finished){subtitle("АРХИВАРИУС","Ночная смена окончена. Нажми Esc, чтобы начать заново.",5000)}}}
 requestAnimationFrame(render);
 })();
 </script>
