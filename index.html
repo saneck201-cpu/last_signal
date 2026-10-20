@@ -288,27 +288,21 @@ function drawTopObject(o,x,y){
  }
 }
 function drawPlayer(){
- var sx=Math.round(st.x-camera),sy=Math.round(st.y),moving=!!(keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||keys.a||keys.A||keys.d||keys.D||keys.w||keys.W||keys.s||keys.S),walk=moving?Math.sin(elapsed*.026)*1.2:Math.sin(elapsed*.003)*.25;
- var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY,side=Math.abs(fx)>0,angle=side?(fx>0?Math.PI/2:-Math.PI/2):0;
- ctx.save();ctx.translate(sx,sy);ctx.scale(1/ROOM_SCALE,1);
- // Контактная тень и две смешные тонкие ноги
- ctx.fillStyle="#02040488";ctx.beginPath();ctx.ellipse(0,2,7,2.5,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#101514";ctx.fillRect(-3,-1+Math.max(0,walk),2,7);ctx.fillRect(2,-1+Math.max(0,-walk),2,7);
- ctx.fillStyle="#50483d";ctx.fillRect(-4,5+Math.max(0,walk),3,2);ctx.fillRect(2,5+Math.max(0,-walk),3,2);
- // Короткое серое пальтишко, нитяные ручки и крошечный рюкзак
- ctx.fillStyle="#171d1c";ctx.fillRect(-6,-13,12,14);ctx.fillStyle="#46504a";ctx.fillRect(-5,-13,10,11);ctx.fillStyle="#252c29";ctx.fillRect(-6,-5,12,4);ctx.fillStyle="#a99a7b";ctx.fillRect(-1,-11,2,6);
- ctx.fillStyle="#202724";ctx.fillRect(-7,-11+walk,1,7);ctx.fillRect(6,-11-walk,1,7);ctx.fillStyle="#c0a987";ctx.fillRect(-8,-4+walk,2,2);ctx.fillRect(6,-4-walk,2,2);
- ctx.fillStyle="#171c1a";ctx.fillRect(-3,-12,6,6);ctx.fillStyle="#9b5148";ctx.fillRect(-1,-10,2,2);
- // Большая голова, тёмная шапка и светлая маска как на референсе
- ctx.fillStyle="#0b0e10";ctx.fillRect(-7,-24,14,13);ctx.fillRect(-9,-20,18,5);ctx.fillStyle="#777e80";ctx.fillRect(-6,-21,12,9);ctx.fillStyle="#c3c5bd";ctx.fillRect(-5,-20,10,8);
- ctx.fillStyle="#101619";ctx.fillRect(-7,-25,14,4);ctx.fillRect(-9,-22,18,2);
- // Глаза/метки маски переезжают на сторону взгляда; голова никогда не встаёт вверх ногами.
- ctx.fillStyle="#323b3c";
- if(fy>0){ctx.fillRect(-3,-14,2,2);ctx.fillRect(2,-14,2,2);ctx.fillRect(0,-12,2,1)}
- else if(side){ctx.fillRect(fx>0?2:-4,-18,2,3);ctx.fillRect(fx>0?4:-6,-15,2,2)}
- else{ctx.fillRect(-3,-19,2,2);ctx.fillRect(2,-19,2,2)}
+ var sx=Math.round(st.x-camera),sy=Math.round(st.y),moving=!!(keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||keys.a||keys.A||keys.d||keys.D||keys.w||keys.W||keys.s||keys.S),walk=moving?Math.sin(elapsed*.026)*1.1:Math.sin(elapsed*.003)*.2;
+ var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY,side=Math.abs(fx)>0,right=fx>0;
+ ctx.save();ctx.translate(sx,sy);ctx.scale(1/ROOM_SCALE,1);ctx.fillStyle="#02040488";ctx.beginPath();ctx.ellipse(0,2,7,2.5,0,0,Math.PI*2);ctx.fill();
+ if(side){
+  var lean=right?1:-1;
+  ctx.fillStyle="#101514";ctx.fillRect(-2,-1+Math.max(0,walk),2,7);ctx.fillRect(1,-1+Math.max(0,-walk),2,7);ctx.fillStyle="#50483d";ctx.fillRect(-3,5+Math.max(0,walk),3,2);ctx.fillRect(1,5+Math.max(0,-walk),3,2);
+  ctx.fillStyle="#111615";ctx.fillRect(-4,-13,8,14);ctx.fillStyle="#404a44";ctx.fillRect(-3,-13,6,11);ctx.fillStyle="#252c29";ctx.fillRect(-4,-5,8,4);ctx.fillStyle="#171e1c";ctx.fillRect(lean*2,-11,2,7);ctx.fillStyle="#c0a987";ctx.fillRect(lean*3,-4,2,2);
+  ctx.fillStyle="#0b0e10";ctx.fillRect(-6,-23,12,12);ctx.fillRect(-7,-20,14,5);ctx.fillStyle="#101619";ctx.fillRect(-7,-25,14,4);ctx.fillRect(-8,-22,16,2);ctx.fillStyle="#747b7c";ctx.fillRect(right?-3:-5,-21,8,9);ctx.fillStyle="#c3c5bd";ctx.fillRect(right?-2:-4,-20,6,7);ctx.fillStyle="#273033";ctx.fillRect(right?2:-4,-18,2,2);ctx.fillStyle="#d4d4ca";ctx.fillRect(right?4:-6,-17,2,2);
+ }else{
+  ctx.fillStyle="#101514";ctx.fillRect(-3,-1+Math.max(0,walk),2,7);ctx.fillRect(2,-1+Math.max(0,-walk),2,7);ctx.fillStyle="#50483d";ctx.fillRect(-4,5+Math.max(0,walk),3,2);ctx.fillRect(2,5+Math.max(0,-walk),3,2);
+  ctx.fillStyle="#111615";ctx.fillRect(-5,-13,10,14);ctx.fillStyle="#46504a";ctx.fillRect(-4,-13,8,11);ctx.fillStyle="#252c29";ctx.fillRect(-5,-5,10,4);ctx.fillStyle="#a99a7b";ctx.fillRect(-1,-11,2,6);ctx.fillStyle="#202724";ctx.fillRect(-6,-11+walk,1,7);ctx.fillRect(5,-11-walk,1,7);ctx.fillStyle="#c0a987";ctx.fillRect(-7,-4+walk,2,2);ctx.fillRect(5,-4-walk,2,2);ctx.fillStyle="#171c1a";ctx.fillRect(-3,-12,6,6);ctx.fillStyle="#9b5148";ctx.fillRect(-1,-10,2,2);
+  ctx.fillStyle="#0b0e10";ctx.fillRect(-7,-24,14,13);ctx.fillRect(-9,-20,18,5);ctx.fillStyle="#101619";ctx.fillRect(-7,-25,14,4);ctx.fillRect(-9,-22,18,2);
+  if(fy>0){ctx.fillStyle="#777e80";ctx.fillRect(-6,-21,12,9);ctx.fillStyle="#c3c5bd";ctx.fillRect(-5,-20,10,8);ctx.fillStyle="#323b3c";ctx.fillRect(-3,-14,2,2);ctx.fillRect(2,-14,2,2);ctx.fillRect(0,-12,2,1)}else{ctx.fillStyle="#333a39";ctx.fillRect(-6,-22,12,8);ctx.fillStyle="#242a2a";ctx.fillRect(-4,-21,8,5);ctx.fillStyle="#75664c";ctx.fillRect(-5,-17,2,2);ctx.fillRect(3,-17,2,2)}
+ }
  ctx.restore();
- if(side){ctx.save();ctx.translate(sx,sy);ctx.rotate(angle);ctx.scale(1/ROOM_SCALE,1);ctx.fillStyle="#c8c8bd";ctx.fillRect(-4,-18,2,3);ctx.restore()}
 }
 var particles=[];for(var pi=0;pi<80;pi++)particles.push({x:Math.random()*W,y:Math.random()*H,v:(.08+Math.random()*.28),s:Math.random()<.8?1:2});
 function render(now){
@@ -319,7 +313,7 @@ function render(now){
  var dx=0,dy=0;if(keys.ArrowLeft||keys.a||keys.A)dx--;if(keys.ArrowRight||keys.d||keys.D)dx++;if(keys.ArrowUp||keys.w||keys.W)dy--;if(keys.ArrowDown||keys.s||keys.S)dy++;
  if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075,roomNow=Math.floor(st.x/ROOM),nx=Math.max(12,Math.min(WORLD-12,st.x+dx/norm*speed)),ny=Math.max(25,Math.min(191,st.y+dy/norm*speed));
  function blocked(cx,cy){var rz=Math.max(0,Math.min(COUNT-1,Math.floor(cx/ROOM))),localX=cx-rz*ROOM;if(cy<71||cy>191)return true;if(localX<22||localX>ROOM-22){if(cy<130||cy>179)return true}return rooms[rz].some(function(o){if(["desk","cabinet","typewriter","boiler","board","lift"].indexOf(o.type)<0)return false;var w=o.type==="desk"?24:21,h=o.type==="desk"?14:18;return Math.abs(cx-o.x)<w&&Math.abs(cy-o.y)<h})}
- var tx=nx,ty=st.y;if(blocked(tx,ty))tx=st.x;if(blocked(st.x,ny))ny=st.y;if(!blocked(tx,ny)){st.x=tx;st.y=ny}else{if(!blocked(tx,st.y))st.x=tx;if(!blocked(st.x,ny))st.y=ny}st.dir=dx>0?1:dx<0?-1:st.dir;if(dx){st.faceX=dx;st.faceY=0}else if(dy){st.faceX=0;st.faceY=dy}
+ var tx=nx,ty=st.y;if(blocked(tx,ty))tx=st.x;if(blocked(st.x,ny))ny=st.y;if(!blocked(tx,ny)){st.x=tx;st.y=ny}else{if(!blocked(tx,st.y))st.x=tx;if(!blocked(st.x,ny))st.y=ny}st.dir=dx>0?1:dx<0?-1:st.dir;if(Math.abs(dx)>Math.abs(dy)){st.faceX=dx>0?1:-1;st.faceY=0}else{st.faceX=0;st.faceY=dy>0?1:-1}
  if(Math.abs(st.x-(render.lastStepX||0))>22){render.lastStepX=st.x;stepSide++;playSound(z===3?"stepPipe":"step");}
  var nz=Math.floor(st.x/ROOM);if(nz>z){var gate=finishChapterGate(z);if(gate){st.x=(z+1)*ROOM-35;var warning="gateWarn"+z;if(!st.flags[warning]){subtitle("АРХИВАРИУС",gate,4500);playSound("wrong");st.flags[warning]=true;save()}}}
  }
