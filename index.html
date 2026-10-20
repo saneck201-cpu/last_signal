@@ -2,194 +2,275 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<meta name="theme-color" content="#101313"><meta name="description" content="Последний свет — атмосферная пиксельная история о памяти, утрате и голосе, который нельзя удержать.">
-<title>ПОСЛЕДНИЙ СВЕТ — интерактивная история</title>
+<meta name="theme-color" content="#090b0c"><meta name="description" content="Обратный адрес — камерный пиксельный хоррор о доме, который вычеркнули из городского реестра.">
+<title>ОБРАТНЫЙ АДРЕС — LAST SIGNAL</title>
 <style>
-:root{color-scheme:dark;--ink:#dce5d6;--muted:#87958c;--faint:#52635c;--acid:#d9ed9a;--rust:#e48a68;--glass:#111816;--line:#34423b}
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101313;color:var(--ink);font-family:ui-monospace,"Cascadia Code","SFMono-Regular",Consolas,monospace}button{font:inherit;color:inherit}
-.app{height:100dvh;min-height:430px;display:grid;grid-template-rows:auto minmax(0,1fr) auto;background:radial-gradient(ellipse at 50% 15%,#222d28 0,#101513 67%);position:relative;isolation:isolate}
-.top{height:62px;padding:0 clamp(14px,3vw,44px);display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff15;z-index:4;background:#111713c9;backdrop-filter:blur(8px)}
-.brand{display:flex;align-items:center;gap:13px}.brandmark{width:23px;height:23px;border:1px solid var(--acid);display:grid;place-items:center;color:var(--acid);font-size:12px;transform:rotate(45deg)}.brandmark span{transform:rotate(-45deg)}.brandname{font-size:11px;letter-spacing:.19em;font-weight:700}.brandname small{display:block;color:var(--muted);font-weight:400;font-size:9px;letter-spacing:.13em;margin-top:4px}
-.tools{display:flex;gap:8px}.tool{background:transparent;border:1px solid #49584e;padding:8px 11px;font-size:10px;letter-spacing:.07em;color:#bac8b8;cursor:pointer;transition:.2s}.tool:hover,.tool:focus-visible{border-color:var(--acid);color:var(--acid);outline:none}.tool.on{color:var(--acid);border-color:#87966d}
-.main{position:relative;min-height:0;display:grid;place-items:center;padding:clamp(12px,2vw,26px);overflow:hidden}
-.sceneFrame{width:min(100%,calc((100dvh - 155px)*1.7778));aspect-ratio:16/9;position:relative;background:#171e1b;border:1px solid #64726955;box-shadow:0 30px 110px #000a,0 0 0 1px #ffffff08;overflow:hidden}
-canvas{width:100%;height:100%;display:block;image-rendering:pixelated;image-rendering:crisp-edges}
-.vignette{position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at center,#0000 44%,#0002 80%,#000a 130%);box-shadow:inset 0 0 50px #0005}
-.grain{position:absolute;inset:0;opacity:.11;pointer-events:none;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");mix-blend-mode:soft-light}
-.sceneTitle{position:absolute;left:22px;top:18px;text-shadow:0 2px 8px #000;pointer-events:none}.chapter{font-size:9px;letter-spacing:.22em;color:var(--acid);text-transform:uppercase}.place{font-size:clamp(12px,1.7vw,19px);letter-spacing:.08em;margin-top:5px}
-.prompt{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);padding:9px 13px;background:#111816d9;border:1px solid #d9ed9a66;color:var(--acid);font-size:10px;letter-spacing:.04em;white-space:nowrap;opacity:0;transition:opacity .15s;pointer-events:none}.prompt.show{opacity:1}
-.footer{min-height:92px;padding:12px clamp(14px,3vw,44px) 17px;border-top:1px solid #ffffff16;display:grid;grid-template-columns:1fr auto;gap:8px 24px;background:#101512}
-.storyline{display:flex;align-items:flex-start;gap:12px;min-width:0}.speaker{color:var(--acid);font-size:9px;letter-spacing:.1em;min-width:88px;padding-top:3px}.line{font-size:12px;line-height:1.65;color:#d4ddd1;max-width:850px}.hint{grid-column:1;color:#718078;font-size:9px;letter-spacing:.04em}.objective{grid-column:2;grid-row:1/3;align-self:center;text-align:right;max-width:235px;color:#a7b4a6;font-size:10px;line-height:1.5}.objective b{display:block;color:var(--acid);font-size:8px;letter-spacing:.17em;margin-bottom:4px}
-.start,.card{position:absolute;inset:0;z-index:5;display:grid;place-items:center;background:#0d1210dd;backdrop-filter:blur(5px);padding:20px}
-.startBox{width:min(660px,100%);text-align:center;padding:clamp(22px,5vw,56px);border:1px solid #87927a48;background:linear-gradient(145deg,#1a211d,#101512);box-shadow:0 25px 90px #0009;position:relative}.startBox:before,.startBox:after{content:"";position:absolute;width:18px;height:18px;border-color:var(--acid);border-style:solid}.startBox:before{top:-1px;left:-1px;border-width:1px 0 0 1px}.startBox:after{bottom:-1px;right:-1px;border-width:0 1px 1px 0}
-.eyebrow{color:var(--acid);font-size:9px;letter-spacing:.3em}.title{font-size:clamp(30px,7vw,64px);letter-spacing:.12em;line-height:1.05;margin:24px 0 9px;color:#edf0db;text-shadow:0 0 28px #d9ed9a20}.subtitle{font-size:10px;letter-spacing:.24em;color:#a3aea1}.intro{max-width:490px;margin:26px auto;color:#aeb9ad;font-size:12px;line-height:1.9}.startMeta{margin:24px auto 20px;color:#77857a;font-size:9px;line-height:2;letter-spacing:.04em}.primary{background:var(--acid);color:#161b14;border:1px solid var(--acid);padding:14px 21px;font-weight:700;font-size:10px;letter-spacing:.1em;cursor:pointer;transition:.18s}.primary:hover{background:#f0ffc0;box-shadow:0 0 28px #d9ed9a35;transform:translateY(-1px)}
-.card{background:#0b100ee8}.cardBox{width:min(610px,100%);max-height:90%;overflow:auto;background:#141b17;border:1px solid #667568;padding:clamp(20px,4vw,38px);box-shadow:0 20px 90px #000b}.cardTag{color:var(--acid);font-size:9px;letter-spacing:.2em}.card h2{font-size:clamp(18px,4vw,27px);line-height:1.3;letter-spacing:.05em;margin:14px 0 21px}.cardText{font-size:12px;line-height:1.9;color:#c0cbbd;white-space:pre-line}.cardActions{display:flex;gap:9px;flex-wrap:wrap;margin-top:25px}.secondary{padding:12px 16px;background:transparent;border:1px solid #57675a;color:#bbc8b6;font-size:9px;letter-spacing:.06em;cursor:pointer}.secondary:hover{color:var(--acid);border-color:var(--acid)}
-.choiceList{display:grid;gap:9px;margin-top:18px}.choice{padding:13px 15px;text-align:left;background:#18211b;border:1px solid #47574b;color:#d1d9cb;cursor:pointer;font-size:11px;line-height:1.6}.choice:hover{border-color:var(--acid);color:var(--acid)}
-.toast{position:absolute;left:50%;top:75px;z-index:8;transform:translate(-50%,-10px);background:#17201b;border:1px solid #73866e;padding:9px 14px;font-size:9px;color:var(--acid);opacity:0;transition:.25s;pointer-events:none}.toast.show{opacity:1;transform:translate(-50%,0)}
-.app:fullscreen{width:100vw;height:100dvh}.app:fullscreen .sceneFrame{width:min(100%,calc((100dvh - 170px)*1.7778))}
-@media(max-width:680px){.top{height:52px}.brandname{font-size:9px}.tools{gap:5px}.tool{padding:7px 8px;font-size:9px}.main{padding:8px}.sceneFrame{width:100%;align-self:center}.footer{min-height:112px;grid-template-columns:1fr;padding:11px 14px 13px}.speaker{min-width:70px}.line{font-size:11px}.objective{grid-column:1;grid-row:auto;text-align:left;max-width:none}.hint{display:none}.sceneTitle{left:12px;top:12px}.prompt{bottom:10px;font-size:9px}.startMeta{font-size:8px}.intro{font-size:11px}}
-@media(max-height:520px){.top{height:44px}.footer{min-height:72px}.intro{margin:13px auto}.title{margin:12px 0 5px}.startBox{padding:18px}.startMeta{margin:12px auto}}
-</style></head>
-<body><div class="app" id="app">
-<header class="top"><div class="brand"><div class="brandmark"><span>✳</span></div><div class="brandname">ПОЛЕВАЯ ЗАПИСЬ<small>АРХИВ 09 · СЕВЕРНЫЙ РЕГИОН</small></div></div><div class="tools"><button class="tool" id="sound">♫ ЗВУК: ВЫКЛ</button><button class="tool" id="full">⛶ ЭКРАН</button><button class="tool" id="save">СОХРАНИТЬ</button><button class="tool" id="restart">СНАЧАЛА</button></div></header>
-<main class="main"><div class="sceneFrame"><canvas id="world" width="384" height="216" aria-label="Пиксельная игровая сцена"></canvas><div class="vignette"></div><div class="grain"></div><div class="sceneTitle"><div class="chapter" id="chapter">ЗАПИСЬ 01</div><div class="place" id="place">КВАРТИРА</div></div><div class="prompt" id="prompt"></div>
-<div class="start" id="start"><div class="startBox"><div class="eyebrow">ИСТОРИЯ О ТОМ, ЧТО МЫ ОСТАВЛЯЕМ</div><h1 class="title">ПОСЛЕДНИЙ<br>СВЕТ</h1><div class="subtitle">ТИХАЯ ИСТОРИЯ В ПЯТИ ГЛАВАХ</div><p class="intro">Двадцать лет после Долгой Ночи. Город учится жить без электричества. Ты идёшь к старой радиовышке, чтобы передать голос брата — единственную запись, которую не смогла стереть зима.</p><div class="startMeta">WASD / СТРЕЛКИ — ДВИЖЕНИЕ<br>E / ПРОБЕЛ — ОСМОТРЕТЬ · ESC — ПАУЗА<br>ИСТОРИЯ СОХРАНЯЕТСЯ В ЭТОМ БРАУЗЕРЕ</div><button class="primary" id="begin">НАЧАТЬ ПУТЬ <span aria-hidden="true">→</span></button></div></div>
-<div class="card" id="card" hidden><div class="cardBox"><div class="cardTag" id="cardTag"></div><h2 id="cardTitle"></h2><div class="cardText" id="cardText"></div><div id="choices"></div><div class="cardActions" id="cardActions"></div></div></div><div class="toast" id="toast"></div></div>
-</main>
-<footer class="footer"><div class="storyline"><div class="speaker" id="speaker">РАДИО</div><div class="line" id="line">Ветер шуршит в проводах. Нажми «Начать путь».</div></div><div class="hint" id="hint">E — осмотреть · WASD — идти</div><div class="objective"><b>СЛЕДУЮЩИЙ ШАГ</b><span id="objective">Найти запись Миши в квартире.</span></div></footer>
+:root{color-scheme:dark;--bone:#d7d4ca;--dim:#96968e;--red:#a34f4d;--glass:#0a0d0ddd;--edge:#ffffff30}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080a0b;color:var(--bone);font-family:ui-monospace,"Cascadia Mono",Consolas,monospace}button,input{font:inherit}
+#app{position:fixed;inset:0;background:#080a0b;overflow:hidden}
+#game{position:absolute;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);inset:50% auto auto 50%;transform:translate(-50%,-50%);image-rendering:pixelated;image-rendering:crisp-edges;background:#090b0c}
+#fx{position:absolute;width:min(100vw,177.7778vh);height:min(100vh,56.25vw);inset:50% auto auto 50%;transform:translate(-50%,-50%);pointer-events:none;overflow:hidden;background:repeating-linear-gradient(0deg,#0000 0,#0000 2px,#00000012 3px);box-shadow:inset 0 0 12vw #000a}
+#fx:after{content:"";position:absolute;inset:-20%;opacity:.12;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 120 120' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.83' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E");animation:grain .25s steps(2) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(1%,-1%)}50%{transform:translate(-1%,1%)}75%{transform:translate(1%,1%)}100%{transform:translate(-1%,-1%)}}
+#top{position:absolute;top:0;left:0;right:0;height:46px;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;color:#aaa99f;font-size:9px;letter-spacing:.16em;opacity:.67;transition:opacity .4s;pointer-events:none}
+#top:hover{opacity:1}#brand{color:#c8c3b4}#top button{pointer-events:auto}
+.iconBtn{border:1px solid #ffffff22;background:#090c0bb8;color:#bebbb0;padding:6px 9px;font-size:9px;letter-spacing:.08em;cursor:pointer}.iconBtn:hover{border-color:#aaa99f;color:#fff}
+#subtitle{position:absolute;left:50%;bottom:6.5%;transform:translateX(-50%);width:min(740px,88vw);padding:13px 20px;background:linear-gradient(90deg,#090b0b00,#090b0bdc 12%,#090b0be8 88%,#090b0b00);text-align:center;opacity:0;transition:opacity .3s;pointer-events:none;text-shadow:0 2px 5px #000}
+#subtitle.show{opacity:1}#who{font-size:9px;letter-spacing:.24em;color:#aaa99f;margin-bottom:7px}#words{font-size:clamp(11px,1.12vw,14px);line-height:1.7;color:#e1ddd1}
+#prompt{position:absolute;left:50%;top:72%;transform:translate(-50%,-50%);font-size:9px;letter-spacing:.09em;color:#e1ddd1;background:#070909bd;border:1px solid #b7b1a244;padding:7px 10px;opacity:0;transition:opacity .18s;pointer-events:none;white-space:nowrap}#prompt.show{opacity:.88}
+#chapter{position:absolute;top:12%;left:50%;transform:translateX(-50%);font-size:9px;letter-spacing:.28em;color:#ccc5b3;text-shadow:0 2px 6px #000;opacity:0;transition:opacity .8s;pointer-events:none}#chapter.show{opacity:.68}
+#toast{position:absolute;top:12%;left:50%;transform:translate(-50%,-8px);padding:7px 11px;font-size:9px;letter-spacing:.14em;color:#d6c9b3;background:#090b0bdc;border:1px solid #9a716144;opacity:0;transition:.3s;pointer-events:none}#toast.show{opacity:1;transform:translate(-50%,0)}
+.overlay{position:absolute;inset:0;display:grid;place-items:center;background:#070909d9;backdrop-filter:blur(3px);opacity:0;visibility:hidden;transition:opacity .8s,visibility .8s;padding:20px}.overlay.show{opacity:1;visibility:visible}
+.panel{width:min(570px,94vw);max-height:88vh;overflow:auto;padding:clamp(22px,4vw,42px);border:1px solid #b0aa9738;background:linear-gradient(145deg,#141817f5,#0a0d0df8);box-shadow:0 26px 100px #000d;position:relative}.panel:before{content:"";position:absolute;inset:6px;border:1px solid #ffffff0b;pointer-events:none}
+.eyebrow{font-size:9px;letter-spacing:.3em;color:#aa9c83}.title{font-family:Georgia,serif;font-weight:400;font-size:clamp(35px,7vw,62px);letter-spacing:.08em;line-height:1;margin:22px 0 10px;color:#e1ddd1}.subtitleTitle{font-family:Georgia,serif;font-size:17px;color:#a9aaa1;letter-spacing:.14em}.intro{font-size:12px;line-height:1.95;color:#a8aaa3;max-width:460px;margin:24px 0}.keys{font-size:9px;line-height:2;color:#737973;letter-spacing:.08em;margin-bottom:20px}
+.primary{border:1px solid #b9b3a0;background:#b9b3a0;color:#111411;padding:12px 16px;font-size:9px;letter-spacing:.16em;cursor:pointer}.primary:hover{background:#e2ddcf}
+.secondary{border:1px solid #ffffff32;background:#111615;color:#c3c0b6;padding:10px 13px;font-size:9px;letter-spacing:.1em;cursor:pointer}.secondary:hover{border-color:#b9b3a0;color:#e2ddcf}
+.panel h2{font-family:Georgia,serif;font-size:clamp(20px,4vw,29px);font-weight:400;letter-spacing:.08em;margin:13px 0 17px;color:#ded9cb}.panelText{font-size:12px;line-height:1.9;color:#b7b8af;white-space:pre-line}.choices{display:grid;gap:8px;margin-top:17px}.choice{padding:12px 14px;background:#101413;border:1px solid #ffffff25;color:#c6c4ba;text-align:left;font-size:11px;line-height:1.6;cursor:pointer}.choice:hover{border-color:#b9b3a0;color:#f0ecdf}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:20px}
+.rangeRow{display:flex;align-items:center;gap:13px;color:#a5a69f;font-size:10px;margin:18px 0}.rangeRow input{accent-color:#c0b9a6;flex:1}
+#touch{position:absolute;bottom:16px;left:14px;display:none;gap:5px;opacity:.4}#touch button{width:38px;height:34px;background:#090d0dcc;border:1px solid #ffffff38;color:#ccc;font-size:14px;touch-action:none}
+#app:fullscreen{background:#000}
+@media(max-width:700px){#top{padding:10px;height:40px;font-size:8px}#subtitle{bottom:5%;width:94vw;padding:10px}#words{font-size:11px}#touch{display:flex}#prompt{top:66%;font-size:8px}.panelText{font-size:11px}}
+</style>
+</head>
+<body>
+<div id="app"><canvas id="game" width="384" height="216" aria-label="Игровой мир"></canvas><div id="fx"></div>
+<div id="top"><span id="brand">ГОРОДСКОЙ АРХИВ · НОЧНАЯ СМЕНА</span><span><button class="iconBtn" id="soundBtn" title="Звук">ЗВУК: ВЫКЛ</button> <button class="iconBtn" id="fullBtn" title="Полный экран">⛶</button></span></div>
+<div id="chapter"></div><div id="prompt"></div><div id="toast"></div>
+<div id="subtitle"><div id="who"></div><div id="words"></div></div>
+<div id="touch"><button data-key="ArrowLeft">←</button><button data-key="ArrowRight">→</button><button data-key="ArrowUp">↑</button><button data-key="ArrowDown">↓</button><button data-key="e">E</button></div>
+<div class="overlay show" id="start"><div class="panel"><div class="eyebrow">ПОТЕРЯННЫЕ АДРЕСА · ДЕЛО 17/0</div><h1 class="title">ОБРАТНЫЙ<br>АДРЕС</h1><div class="subtitleTitle">ночная смена</div><p class="intro">В городском архиве осталась одна лампа. В списке на утро — дом, которого нет на карте. На столе лежит карточка с твоим почерком и сегодняшней датой.</p><div class="keys">WASD / СТРЕЛКИ — ДВИЖЕНИЕ<br>E / SPACE — ОСМОТРЕТЬ · ESC — ПАУЗА<br>ЗВУК ВКЛЮЧАЕТСЯ ОТДЕЛЬНО</div><button class="primary" id="begin">ПРИНЯТЬ СМЕНУ</button></div></div>
+<div class="overlay" id="modal"><div class="panel"><div class="eyebrow" id="mTag">НОЧНАЯ СМЕНА</div><h2 id="mTitle"></h2><div class="panelText" id="mText"></div><div class="choices" id="mChoices"></div><div class="actions" id="mActions"></div></div></div>
 </div>
 <script>
 (function(){
 "use strict";
-var c=document.getElementById("world"),x=c.getContext("2d"),app=document.getElementById("app"),$=function(id){return document.getElementById(id)};
-x.imageSmoothingEnabled=false;
-var chapters=[
- {name:"КВАРТИРА",tag:"ЗАПИСЬ 01 · ТИШИНА",floor:"#29342e",wall:"#414c40",objects:[
-  {id:"radio",x:87,y:117,label:"Старый приёмник"},
-  {id:"photo",x:155,y:83,label:"Фотография"},
-  {id:"window",x:291,y:66,label:"Окно"},
-  {id:"door",x:349,y:135,label:"Дверь во двор"}]},
- {name:"ДВОР",tag:"ЗАПИСЬ 02 · СНЕГ",floor:"#303a37",wall:"#394744",objects:[
-  {id:"tree",x:92,y:93,label:"Рябина"},
-  {id:"bench",x:190,y:141,label:"Скамейка"},
-  {id:"memorial",x:291,y:99,label:"Стена имён"},
-  {id:"exit",x:350,y:135,label:"Переулок"}]},
- {name:"МЕТРО",tag:"ЗАПИСЬ 03 · ГЛУБИНА",floor:"#292e32",wall:"#41454a",objects:[
-  {id:"turnstile",x:98,y:127,label:"Турникет"},
-  {id:"machine",x:190,y:103,label:"Автомат с водой"},
-  {id:"map",x:278,y:74,label:"Схема линий"},
-  {id:"exit",x:349,y:135,label:"Лестница наверх"}]},
- {name:"ШКОЛА",tag:"ЗАПИСЬ 04 · ГОЛОСА",floor:"#33332e",wall:"#48473e",objects:[
-  {id:"desk",x:93,y:132,label:"Парты"},
-  {id:"piano",x:185,y:100,label:"Пианино"},
-  {id:"blackboard",x:288,y:76,label:"Доска"},
-  {id:"exit",x:349,y:135,label:"Крыша"}]},
- {name:"РАДИОВЫШКА",tag:"ЗАПИСЬ 05 · СИГНАЛ",floor:"#263334",wall:"#344847",objects:[
-  {id:"generator",x:92,y:127,label:"Генератор"},
-  {id:"antenna",x:198,y:76,label:"Антенна"},
-  {id:"recorder",x:285,y:116,label:"Кассетный плеер"},
-  {id:"transmit",x:350,y:135,label:"Передатчик"}]}
+var canvas=document.getElementById("game"),ctx=canvas.getContext("2d"),W=384,H=216,app=document.getElementById("app"),$=function(x){return document.getElementById(x)};
+ctx.imageSmoothingEnabled=false;
+var ROOM=520,COUNT=5,WORLD=ROOM*COUNT;
+var names=["АРХИВ","ПЛОЩАДКА 17","ЛИНИЯ 0","КОТЕЛЬНАЯ","РЕЕСТРОВАЯ"];
+var rooms=[
+ [{id:"desk",x:115,y:137,label:"Карточка на столе",type:"desk"},{id:"window",x:245,y:88,label:"Окно во двор",type:"window"},{id:"clock",x:365,y:92,label:"Настенные часы",type:"clock"},{id:"phone",x:425,y:143,label:"Телефон",type:"phone"}],
+ [{id:"mail",x:ROOM+94,y:143,label:"Письмо под дверью",type:"mail"},{id:"door",x:ROOM+205,y:111,label:"Дверь без номера",type:"door"},{id:"shoes",x:ROOM+326,y:158,label:"Детские ботинки",type:"shoes"},{id:"lift",x:ROOM+430,y:127,label:"Лифт",type:"lift"}],
+ [{id:"list",x:ROOM*2+87,y:92,label:"Список жильцов",type:"list"},{id:"board",x:ROOM*2+230,y:136,label:"Коммутатор",type:"board"},{id:"tape",x:ROOM*2+361,y:91,label:"Катушка",type:"tape"},{id:"exit2",x:ROOM*2+447,y:129,label:"Дверь в служебный коридор",type:"door"}],
+ [{id:"pipes",x:ROOM*3+100,y:82,label:"Трубы отопления",type:"pipes"},{id:"boiler",x:ROOM*3+244,y:138,label:"Котёл",type:"boiler"},{id:"mirror",x:ROOM*3+366,y:95,label:"Зеркало лифта",type:"mirror"},{id:"exit3",x:ROOM*3+448,y:128,label:"Лестничная дверь",type:"door"}],
+ [{id:"cabinet",x:ROOM*4+92,y:126,label:"Картотечный шкаф",type:"cabinet"},{id:"typewriter",x:ROOM*4+236,y:140,label:"Машинка",type:"typewriter"},{id:"window2",x:ROOM*4+357,y:77,label:"Окно на улицу",type:"window"},{id:"send",x:ROOM*4+451,y:127,label:"Почтовый лоток",type:"send"}]
 ];
-var s={started:false,room:0,p:{x:190,y:161,dir:1},flags:{},items:[],sound:false,done:false};
-var scripts={
- radio:[["ЛЕНА","Миша, если ты где-то есть, то сейчас, наверное, опять скажешь, что я слишком громко дышу."],["РАДИО","…снег… рябина… маяк…"],["ЛЕНА","Запись на кассете. Остался только этот кусок. Я обещала донести его до вышки, если однажды найду батарею."],["СИСТЕМА","В кармане куртки лежит ключ. Значит, ты уже готовилась к этому пути."]],
- photo:[["ЛЕНА","Мы с Мишей у этой двери. Он тогда был выше меня на полголовы и делал вид, что это навсегда."],["МИША · ЗАПИСЬ","Когда вырастем, я построю радио, которое ловит только хорошие новости."],["ЛЕНА","Я смеялась. Потом научилась чинить радио. Хорошие новости так и не научилась находить."]],
- window:[["ЛЕНА","На крыше напротив кто-то зажёг фонарь. Один раз. Потом ещё раз."],["СИСТЕМА","На стекле изнутри выцарапано: «Если дойдёшь до моря — не жди меня»."],["ЛЕНА","Я помню эти слова. Не помню, когда он их написал."]],
- door:[["СИСТЕМА","Ключ поворачивается с первого раза. За дверью — двор, в котором снег не тает даже в июле."],["ЛЕНА","Когда-то Миша прятал здесь конфеты в дупле рябины. Я каждый год забывала, а он каждый год находил."],["СИСТЕМА","Путь дальше лежит через переулок."] ],
- tree:[["ЛЕНА","Рябина всё ещё жива. Ветки тонкие, почти чёрные, но под снегом видны красные ягоды."],["ЛЕНА","Миша говорил, что ягоды горькие, потому что деревья тоже помнят зиму."],["СИСТЕМА","У корней спрятана маленькая жестяная коробка. Внутри — сухие семена. Ты забираешь их."]],
- bench:[["ЛЕНА","Здесь сидели родители, пока мы катались на велосипедах. Отец всегда делал вид, что читает, но следил за нами."],["ЛЕНА","После Ночи мама ждала его тут каждый вечер. Потом перестала ждать. Не потому, что перестала любить."],["СИСТЕМА","На дереве рядом отмечены четыре зимы: зарубка на каждый год, когда в городе ещё оставались дети."]],
- memorial:[["СИСТЕМА","На стене имена тех, кто не успел добраться до тёплого сектора."],["ЛЕНА","Миша не здесь. Я повторяю это, чтобы не превратить его в памятное имя."],["ЛЕНА","Он погиб в день, когда запустил аварийный передатчик. Голос его успел дойти до половины города."],["СИСТЕМА","Последняя строчка написана другим почерком: «Живым — греть друг друга»."]],
- metro:[["ЛЕНА","Лестница в метро забита льдом. Мы идём по служебному тоннелю — там ещё сохранилась вентиляционная тяга."],["СИСТЕМА","Где-то впереди капает вода. Этот звук кажется невозможным и потому почти прекрасным."]],
- turnstile:[["СИСТЕМА","Турникет остановился на полпути. Под ним застряла детская рукавичка."],["ЛЕНА","Красная. Миша потерял такую в первую зиму. Мама связала вторую — синюю, чтобы он перестал путать."],["ЛЕНА","Я тогда сказала, что красная красивее. Он отдал её мне."],["СИСТЕМА","Ты прячешь рукавичку в карман. Она легче воспоминания."]],
- machine:[["СИСТЕМА","Автомат не работает. Но под ним стоят две стеклянные бутылки. В одной — вода, в другой — записка."],["ЗАПИСКА","«Если найдёшь воду — оставь половину следующему. Мы здесь не последние»."],["ЛЕНА","Я оставляю бутылку. Вода — это тоже сообщение."],["СИСТЕМА","Ты находишь под автоматом запасную батарею для старого диктофона."]],
- map:[["ЛЕНА","Схема города выцвела. Красным карандашом проведён маршрут от школы к радиовышке."],["ЛЕНА","Рядом почерк Миши: «Лена, если слышишь — иди не по прямой. Прямая дорога слишком похожа на конец»."],["СИСТЕМА","На полях отмечена станция на крыше школы. Там есть питание."]],
- desk:[["ЛЕНА","Моя парта. Я писала на ней тексты песен, которые стеснялась показывать."],["МИША · ЗАПИСЬ","Ты всё время ждёшь, что сначала станет не страшно, а потом ты начнёшь. Так не работает."],["ЛЕНА","Он был младше, но почему-то всегда знал, что сказать."]],
- piano:[["СИСТЕМА","Пианино расстроено. Несколько клавиш не звучат."],["ЛЕНА","Миша играл только одной рукой. Говорил, что вторая нужна, чтобы держать фонарь."],["ЛЕНА","Я нажимаю три клавиши: до, ми, соль. Аккорд выходит неровным, как наши голоса в старой записи."],["СИСТЕМА","Педаль сдвигается. Под ней — последняя страница школьного хора. Ты берёшь её."]],
- blackboard:[["СИСТЕМА","На доске остался список дежурных. Последняя дата — день Долгой Ночи."],["ЛЕНА","Миша дежурил здесь, хотя уже давно не учился. Он приходил чинить батареи для школьного убежища."],["СИСТЕМА","На доске мелом нарисованы пять нот. На полях: «Не забудь оставить место для паузы»."],["ЛЕНА","Место для паузы. Может быть, это и есть всё, что нужно песне."]],
- generator:[["ЛЕНА","Генератор школьной крыши. Ему нужна батарея и правильная последовательность запуска."],["СИСТЕМА","На корпусе выцарапано: три коротких импульса, пауза, один длинный."],["ЛЕНА","Старая азбука Миши. Он всегда считал паузы частью сообщения."]],
- antenna:[["ЛЕНА","Вышка покрыта льдом. Приёмная антенна смотрит на север, передающая — на город."],["СИСТЕМА","Ветер раскачивает кабель. Он отзывается низким гулом, будто кто-то тянет одну и ту же ноту."],["ЛЕНА","Здесь Миша включил передатчик в последний раз. Я не знаю, что именно он услышал перед тем, как нажать кнопку."]],
- recorder:[["СИСТЕМА","Кассета цела. Но батареи нет."],["ЛЕНА","В записи Миша говорил: «Не передавай всё целиком. Там есть кусок, который должен остаться только у тебя»."],["ЛЕНА","Он всегда думал, что у памяти есть личные границы. Наверное, это правильно."]],
- transmit:[["СИСТЕМА","Передатчик может отправить запись в город. Энергии хватит только на один длинный сигнал."],["ЛЕНА","В кассете голос Миши, но на последней секунде слышно моё имя. Я не знаю, что он хотел сказать дальше."],["ЛЕНА","Впервые за много лет можно сделать что-то, чего он не успел выбрать за меня."]]
+var st={v:2,started:false,x:76,y:165,flags:{},facts:[],seen:[],sound:false,volume:.55,finished:false,ending:null};
+var keys={},lastStep=0,stepSide=0,near=null,camera=0,elapsed=0,lastRoom=-1,subtitleTimer=0,chapterTimer=0,toastTimer=0,endingCount=0;
+var audio=null,bus=null,ambience=[],musicTimer=null,lowOsc=[],noise=null,noiseGain=null;
+var palette=[{wall:"#24292b",floor:"#171b1d",lit:"#5e6060",red:"#884a4a"},{wall:"#292729",floor:"#18191b",lit:"#625957",red:"#98544d"},{wall:"#20272a",floor:"#151b1e",lit:"#526469",red:"#8e504b"},{wall:"#2a2927",floor:"#191a19",lit:"#6a6256",red:"#9a5648"},{wall:"#252729",floor:"#17191b",lit:"#696258",red:"#a15248"}];
+var narrative={
+ desk:[["АРХИВАРИУС","На карточке — дом 17, подъезд Б. Графа «жильцы» пуста. Внизу стоит твоя подпись. Чернила ещё блестят, хотя бумага старая."],["АРХИВАРИУС","Рядом аккуратно выведено: «Проверить после расселения». Почерк твой, а дата — завтрашняя. Может быть, часы в здании опять спешат."],["ЗАПИСЬ НА ПОЛЯХ","Если увидишь нулевой адрес, не ставь прочерк. Прочерк означает, что никого не было."],["АРХИВАРИУС","Ты знаешь формулировки. Ты не помнишь, когда научилась писать ими так ровно."]],
+ window:[["АРХИВАРИУС","Во дворе горят окна. Считаешь: одно, два, три. Пауза. Ещё одно. Потом темнота."],["АРХИВАРИУС","Через минуту они повторяются: два коротких огня, длинная пауза, один. В здании напротив кто-то подаёт знак не из квартиры, а из лестничного пролёта."],["АРХИВАРИУС","На стекле архивного окна нацарапано: «Смотри не на окна. На промежутки». Ты записываешь ритм: два — пауза — один."],["СИСТЕМА","В свете лампы проступает пыльный след ладони. Он находится снаружи. На шестом этаже."]],
+ clock:[["АРХИВАРИУС","Часы показывают 02:16. Секундная стрелка дрожит между двумя делениями."],["АРХИВАРИУС","Мама всегда говорила: в нашем доме время отстаёт на минуту, потому что никто не хотел первым приходить домой."],["АРХИВАРИУС","Ты не помнишь, чья это мама. Но на обратной стороне часов написано: «Соне — когда вернётся»."],["СИСТЕМА","Когда отворачиваешься, стрелка сдвигается на одно деление."]],
+ phone:[["ДИСПЕТЧЕР","Архив, слушаю."],["ГОЛОС ИЗ ТРУБКИ","Вы нашли наш этаж?"],["ДИСПЕТЧЕР","На плане нет этажа ноль."],["ГОЛОС ИЗ ТРУБКИ","Потому что его убрали с плана. Это не одно и то же."],["ДИСПЕТЧЕР","Кто говорит?"],["ГОЛОС ИЗ ТРУБКИ","Ты каждый раз спрашиваешь. Я каждый раз забываю ответить."],["СИСТЕМА","Линия отключается. На столе остаётся запах мокрой шерсти."]],
+ mail:[["АРХИВАРИУС","Конверт адресован «дом 17, этаж 0, семье Мироновых». Марка погашена тринадцать лет назад."],["ПИСЬМО","«Мы переехали не туда, куда нас отправили. На новом месте нет окна на север. Соне говорят, что она выдумала старую лестницу. Если найдёшь эту бумагу — скажи ей, что перила всё ещё холодные»."],["АРХИВАРИУС","Внутри нет подписи. Только отпечаток маленького пальца и дата: 4 ноября. В этот день в городе отключили отопление."],["СИСТЕМА","На конверте есть второй штамп: «ВОЗВРАТ НЕВОЗМОЖЕН». Он поставлен поверх первого."]],
+ door:[["АРХИВАРИУС","На двери нет номера. Только четыре отверстия от таблички. Внизу свежая царапина: кто-то недавно пытался прикрутить её обратно."],["ДЕТСКИЙ ГОЛОС","Мама сказала не открывать. Она думает, что нас нет в списке."],["АРХИВАРИУС","Замок не заперт. За дверью слышны шаги — ровно в темпе твоих собственных."],["АРХИВАРИУС","Ты не открываешь. На полу виден мелкий след от ботинка, направленный внутрь." ]],
+ shoes:[["АРХИВАРИУС","Под батареей стоят два детских ботинка. Один мокрый. Второй набит газетой, чтобы не потерял форму."],["АРХИВАРИУС","На подошвах — разный износ. Один ботинок шёл по лестнице вверх, другой — вниз."],["ГОЛОС СОНЯ","Если их поставить рядом, они всё равно не будут парой."],["АРХИВАРИУС","Ты ставишь их рядом. Впервые они смотрят в одну сторону."],["СИСТЕМА","Ты запоминаешь: в документах числится одна семья, а в доме жили двое детей."]],
+ lift:[["АРХИВАРИУС","Лифт не работает. На табло горит «0», но кнопки нулевого этажа нет."],["ГОЛОС СОНЯ","Нужно ехать туда, где кнопка не светится."],["АРХИВАРИУС","Под панелью торчат три провода: чёрный, белый и красный. Из шахты доносится стук: коротко, коротко, долго."],["СИСТЕМА","Ты слышала этот ритм у окна. Он не стучит в дверь. Он считает этажи." ]],
+ list:[["АРХИВАРИУС","Реестр расселения. Дом 17: 46 квартир, 0 жильцов, 46 уведомлений вручено."],["АРХИВАРИУС","В столбце «получатель» стоят инициалы: М. С., А. М., С. М. У Мироновых совпадает адрес, но разные даты."],["ЗАПИСЬ КУРАТОРА","Список закрыт по телефону. Письменное подтверждение не требуется. Исполнитель: Диспетчер ночной смены."],["АРХИВАРИУС","Твоя подпись стоит внизу. Рядом поставлена подпись Яны Петровны — единственного человека, которого не было на смене."],["СИСТЕМА","Ты запоминаешь несоответствие: фамилия Мироновых — в письме; дата — в карточке; в списке их будто не было."]],
+ board:[["АРХИВАРИУС","Старый коммутатор. Провода заведены в гнёзда с номерами квартир. Нулевая линия обрезана, но конец всё ещё тёплый."],["ГОЛОС ИЗ ТРУБКИ","Не соединяй меня с улицей. Там уже поставили точку."],["АРХИВАРИУС","На крышке схема: сначала имя, затем номер, после — дата. В реестре порядок обратный."],["СИСТЕМА","Чтобы восстановить линию, сопоставь фамилию из письма, квартиру из списка и дату на штампе."]],
+ tape:[["ГОЛОС ЯНЫ","Лида, если ты снова в архиве, послушай до конца. Я не ушла из дома. Я вышла за Соней и не смогла вернуться."],["ГОЛОС ЯНЫ","В списке написали, что все получили ключи от нового жилья. Мне дали ключ от комнаты, в которой уже жила другая семья."],["ГОЛОС ЯНЫ","Я не прошу вернуть квартиру. Я прошу не говорить Соне, что её детство было ошибкой."],["АРХИВАРИУС","На записи дыхание обрывается, затем начинается снова — с того же вздоха. Ты понимаешь: кассету перезаписывали поверх другой."],["СИСТЕМА","На катушке выцарапано: «слушать после полуночи»."]],
+ pipes:[["АРХИВАРИУС","В трубе кто-то отбивает ритм: два коротких удара, пауза, один длинный."],["АРХИВАРИУС","На стене схема отопления. Линия ноль не отмечена, но к ней ведут три ответвления: квартира, лестница, улица."],["ГОЛОС ИЗ ТРУБЫ","Мы не стучали, чтобы нас нашли. Мы стучали, чтобы проверить, слышит ли кто-нибудь."],["АРХИВАРИУС","В старом журнале указано: перед открытием клапана слушать до конца. Последний удар — не команда. Это вопрос."]],
+ boiler:[["АРХИВАРИУС","Клапан заржавел. На маховике метки: вверх, вниз, пусто. Рядом карандашом: «не повторяй движение»."],["АРХИВАРИУС","Ты поворачиваешь его один раз. В стенах прокатывается дрожь, как будто здание выдохнуло."],["СИСТЕМА","Из трубы падает вода. Она чёрная от ржавчины, но пахнет мокрым камнем и мылом."],["ГОЛОС СОНЯ","Это лестница. Я помню, как пахли ступени после дождя."],["АРХИВАРИУС","В журнале было сказано: два коротких, пауза, один длинный. Ты повторяешь ритм на клапане."]],
+ mirror:[["АРХИВАРИУС","В зеркале коридор длиннее на одну дверь. Ты оборачиваешься — там стена."],["АРХИВАРИУС","В отражении на твоём пальто нет архивного жетона. На груди только выцветшая бумажная карточка: «Миронова, Соня»."],["АРХИВАРИУС","Ты прижимаешь ладонь к стеклу. Оттуда отвечают не сразу. Потом — два коротких прикосновения и одно долгое."],["СИСТЕМА","Зеркало запотевает. На нём проступает фраза: «Тебе не нужно быть свидетелем, чтобы помнить»."]],
+ cabinet:[["АРХИВАРИУС","Ящик с делом 17/0 запаян сургучом. На нём штамп: «НЕ ВОССТАНАВЛИВАТЬ. ПРИЧИНА: ДВОЙНОЙ УЧЁТ»."],["АРХИВАРИУС","Внутри две одинаковые карточки: «Миронова, Яна» и «Миронова, Соня». На обеих один и тот же адрес, но на одной дата рождения исправлена поверх другой."],["ЗАПИСКА ЯНЫ","«Соне было семь. В ведомости поставили восемь, чтобы совпал возраст для переселения. Я подписала. Потом не смогла доказать, что она вообще была в доме»."],["АРХИВАРИУС","Это не ошибка счетовода. Кто-то менял числа, чтобы семья могла пройти по списку. Потом список стал единственным доказательством, что семья существовала."],["СИСТЕМА","Ты находишь собственную служебную записку: «все двери закрыты». Под ней дата на день раньше эвакуации."]],
+ typewriter:[["АРХИВАРИУС","В машинке застрял лист. Начата строка: «Я подтверждаю, что дом 17…»."],["АРХИВАРИУС","Печать на листе старая, ещё до электронной регистрации. Бумагу можно вынуть, но след букв останется на следующем листе."],["ГОЛОС ЛИДЫ","Я слышала звонок. Я сказала, что проверю список. Я не проверила."],["АРХИВАРИУС","Это твой голос. Не запись и не телефон. Ты произносишь слова сейчас, но они звучат так, будто давно лежали в комнате."],["СИСТЕМА","Под клавишей «0» прилипла записка: «Яна была на лестнице. Я её видела»."]],
+ window2:[["АРХИВАРИУС","Снаружи нет улицы. Только фасад этого же дома, видимый под другим углом."],["АРХИВАРИУС","На шестом этаже загорается окно. В нём стоят две фигуры. Одна машет. Другая держит ладонь на стекле."],["ГОЛОС СОНЯ","Лида, если ты нас услышишь, не делай вид, что ты не можешь выбрать."],["АРХИВАРИУС","Фигуры не похожи на призраков. Они похожи на людей, которым слишком долго обещали, что кто-нибудь придёт."]]
 };
-var audio=null,master=null,loop=null,noiseNode=null,tick=0,musicStep=0,held={},near=null,lastMove=0,modalAction=null;
-var palettes=[
- {sky:"#182522",ground:"#29352e",bright:"#aab996",dark:"#111a18",sun:"#c3c18e"},
- {sky:"#202c2e",ground:"#303c38",bright:"#b9c59d",dark:"#17211f",sun:"#d5c68a"},
- {sky:"#20272e",ground:"#292f34",bright:"#9cb7b0",dark:"#12191e",sun:"#d4b885"},
- {sky:"#292a2b",ground:"#33332e",bright:"#c4b98f",dark:"#191a18",sun:"#dfc374"},
- {sky:"#182c2b",ground:"#253432",bright:"#b3cda7",dark:"#101c1b",sun:"#d9ed9a"}
-];
-function setLine(w,t){$("speaker").textContent=w;$("line").textContent=t}
-function save(){try{localStorage.setItem("last-light-save",JSON.stringify(s))}catch(e){}}
-function load(){try{var v=JSON.parse(localStorage.getItem("last-light-save"));if(v&&v.started&&!v.done){s=Object.assign(s,v);return true}}catch(e){}return false}
-function sayCard(tag,title,text,buttons){$("cardTag").textContent=tag;$("cardTitle").textContent=title;$("cardText").textContent=text;$("choices").innerHTML="";var a=$("cardActions");a.innerHTML="";(buttons||[{label:"ПРОДОЛЖИТЬ →",run:closeCard}]).forEach(function(b){var q=document.createElement("button");q.className=b.primary?"primary":"secondary";q.textContent=b.label;q.onclick=b.run;a.appendChild(q)});$("card").hidden=false}
-function closeCard(){$("card").hidden=true;modalAction=null}
-function toast(t){$("toast").textContent=t;$("toast").classList.add("show");setTimeout(function(){$("toast").classList.remove("show")},1800)}
-function start(){s.started=true;$("start").style.display="none";setLine("ЛЕНА","Двадцать лет назад город погас. Сегодня я иду к вышке.");$("objective").textContent="Осмотреть приёмник и найти кассету.";if(s.sound)audioStart();save();toast("ЗАПИСЬ 01 · КВАРТИРА")}
-function chapterChange(n){if(n<0||n>=chapters.length)return;s.room=n;s.p.x=34;s.p.y=155;s.flags["entered"+n]=true;nearest();$("chapter").textContent=chapters[n].tag;$("place").textContent=chapters[n].name;$("objective").textContent=["Осмотреть приёмник и найти кассету.","Найти старый переулок через двор.","Найти путь к школе.","Подать питание на крышу.","Настроить передатчик и выбрать, что отправить."][n];var lines=["Дверь закрывается за спиной. В квартире остаётся тёплый воздух, который ты больше не почувствуешь.","Снег скрипит под подошвами. Город медленно отступает от собственных домов.","Под землёй холод иной: он не кусает, а терпеливо ждёт.","Школьная крыша встречает серым рассветом. За много лет это первое место, где видно небо.","Ветер приносит запах соли. Море далеко, но сегодня его слышно."];setLine("ЗАПИСЬ",lines[n]);toast(chapters[n].tag);save()}
-function doInteract(id){if(!s.started||s.done)return;
- if(id==="door"){if(s.room===0){if(!s.flags.radio){sayCard("ЗАПИСЬ 01 · ВЫХОД","СНАЧАЛА — ГОЛОС","Из квартиры нельзя уйти, не забрав запись. В старом приёмнике ещё крутится последняя кассета Миши.",[{label:"ПОНЯТНО",run:closeCard}]);return}chapterChange(1);return}}
- if(id==="exit"){if(s.room===1&&(!s.flags.seeds||!s.flags.memorial)){sayCard("ЗАПИСЬ 02 · ДВОР","НЕ ОСТАВЛЯЙ ПУСТЫМ","Прежде чем идти дальше, осмотри рябину и стену имён. Иногда путь продолжается только после того, как ты заметил, кто был здесь до тебя.",[{label:"ВЕРНУТЬСЯ",run:closeCard}]);return}if(s.room===2&&(!s.flags.battery||!s.flags.map)){sayCard("ЗАПИСЬ 03 · МЕТРО","НЕ ХВАТАЕТ ДВУХ ВЕЩЕЙ","Найди батарею в автомате и сверь путь по схеме. Без них старая школьная крыша останется отрезанной от города.",[{label:"ВЕРНУТЬСЯ",run:closeCard}]);return}if(s.room===3&&!s.flags.power){sayCard("ЗАПИСЬ 04 · ШКОЛА","СНАЧАЛА ЗАЖГИ СВЕТ","На крыше есть генератор. Найди ноты Миши в классе, а потом подай питание по его старой последовательности.",[{label:"ВЕРНУТЬСЯ",run:closeCard}]);return}chapterChange(Math.min(4,s.room+1));return}
- if(id==="radio"&&!s.flags.radio){s.flags.radio=true;s.items.push("Кассета");$("objective").textContent="Осмотреть двор: рябину и стену имён.";save()}if(id==="memorial")s.flags.memorial=true;if(id==="map")s.flags.map=true;
- if(id==="tree"&&!s.flags.seeds){s.flags.seeds=true;s.items.push("Семена");save()}
- if(id==="machine"&&!s.flags.battery){s.flags.battery=true;s.items.push("Батарея");save()}
- if(id==="piano"&&!s.flags.song){s.flags.song=true;s.items.push("Ноты");save()}
- if(id==="generator"){
-   if(!s.flags.battery||!s.flags.song){sayCard("ЗАПИСЬ 04 · ПИТАНИЕ","ГЕНЕРАТОР","Чтобы запустить старый блок, нужны батарея из метро и последовательность нот с классной доски. Миша всегда оставлял подсказки в музыке.",[{label:"НАЗАД",run:closeCard}]);return}
-   if(!s.flags.power){puzzle();return}
- }
- if(id==="recorder"&&!s.flags.recorded){sayCard("ЗАПИСЬ 05 · КАССЕТА","НЕТ ПИТАНИЯ","В кассетнике лежит запись. Батарея из автомата подойдёт.",[{label:"ПОНЯТНО",run:closeCard}]);return}
- if(id==="transmit"){if(!s.flags.power){sayCard("ЗАПИСЬ 05 · ПЕРЕДАТЧИК","ВЫШКА МОЛЧИТ","Сначала запусти генератор на крыше школы. Потом вернись к передатчику.",[{label:"НАЗАД",run:closeCard}]);return}if(!s.flags.recorded){sayCard("ЗАПИСЬ 05 · ПЕРЕДАТЧИК","ТЫ НЕ СЛЫШАЛ ЕГО","Сначала включи кассетный плеер. Перед последней передачей ты должен услышать всю запись, даже если боишься её конца.",[{label:"ПОНЯТНО",run:closeCard}]);return}if(!s.flags.tuned){tunePuzzle();return}endingChoice();return}
- var seq=scripts[id];if(!seq){setLine("ЛЕНА","Я пока не хочу это трогать.");return}
- if(id==="recorder"&&s.flags.power)s.flags.recorded=true;
- var idx=0;
- function next(){if(idx>=seq.length){closeCard();if(id==="radio")$("objective").textContent="Спуститься во двор. Найти следы Миши.";if(id==="door")$("objective").textContent="Выйти во двор.";if(id==="generator"&&s.flags.power)$("objective").textContent="Вернуться к вышке. Прослушать запись.";save();return}var a=seq[idx++];$("cardTag").textContent=chapters[s.room].tag;$("cardTitle").textContent=a[0];$("cardText").textContent=a[1];$("choices").innerHTML="";var ac=$("cardActions");ac.innerHTML="";var b=document.createElement("button");b.className="primary";b.textContent=idx<seq.length?"ДАЛЬШЕ →":"ЗАКРЫТЬ";b.onclick=next;ac.appendChild(b);$("card").hidden=false;setLine(a[0],a[1])}
+var puzzles={
+ observation:{tag:"ДЕЛО 17/0 · НАБЛЮДЕНИЕ",title:"ПРОМЕЖУТКИ",text:"За окном повторился световой знак. Вспомни ритм: два огня, долгая пауза, один огонь. Выбери, что осталось между ними.",answers:["одна тёмная секунда","два тёмных окна","долгая пауза"],correct:2,flag:"observed"},
+ registry:{tag:"ДЕЛО 17/0 · СВЕРКА",title:"НЕСОВПАДЕНИЕ",text:"Письмо датировано 4 ноября; штамп возврата — 13 ноября. В реестре написано, что ключи выдали 12 ноября. Какая запись противоречит документам?",answers:["ключи выдали до возврата письма","письмо отправили после возврата","все три даты совпадают"],correct:0,flag:"dateFound"},
+ switch:{tag:"ДЕЛО 17/0 · КОММУТАЦИЯ",title:"СОЕДИНИТЬ ЛИНИЮ",text:"Схема требует: сначала имя, потом номер, затем дата. На столе: Яна Миронова · квартира 0 · 4 ноября. В каком порядке соединить гнёзда?",answers:["имя → адрес → дата","дата → имя → адрес","адрес → дата → имя"],correct:0,flag:"lineRestored"},
+ sound:{tag:"ДЕЛО 17/0 · ТРУБА",title:"ПОСЛЕДНИЙ УДАР",text:"Труба отбивает два коротких удара, долгую паузу и один длинный. Как открыть клапан?",answers:["два коротких, пауза, один длинный","один длинный, пауза, два коротких","четыре быстрых удара"],correct:0,flag:"valve"}
+};
+function defaults(){return {v:2,started:false,x:76,y:165,flags:{},facts:[],seen:[],sound:false,volume:.55,finished:false,ending:null}}
+function save(){try{localStorage.setItem("lastSignalArchiveSave",JSON.stringify(st))}catch(e){}}
+function load(){try{var a=JSON.parse(localStorage.getItem("lastSignalArchiveSave"));if(a&&a.v===2)return Object.assign(defaults(),a)}catch(e){}return null}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(function(){$("toast").classList.remove("show")},1900)}
+function subtitle(who,text,ms){$("who").textContent=who;$("words").textContent=text;$("subtitle").classList.add("show");clearTimeout(subtitleTimer);subtitleTimer=setTimeout(function(){$("subtitle").classList.remove("show")},ms||5300)}
+function chapter(n){$("chapter").textContent=names[n];$("chapter").classList.add("show");clearTimeout(chapterTimer);chapterTimer=setTimeout(function(){$("chapter").classList.remove("show")},2800);playSound("door")}
+function showModal(tag,title,text,choices,actions){$("mTag").textContent=tag;$("mTitle").textContent=title;$("mText").textContent=text;$("mChoices").innerHTML="";$("mActions").innerHTML="";$("modal").classList.add("show");if(choices)choices.forEach(function(item){var b=document.createElement("button");b.className="choice";b.textContent=item.text;b.onclick=item.run;$("mChoices").appendChild(b)});if(actions)actions.forEach(function(item){var b=document.createElement(item.primary?"button":"button");b.className=item.primary?"primary":"secondary";b.textContent=item.text;b.onclick=item.run;$("mActions").appendChild(b)})}
+function hideModal(){$("modal").classList.remove("show")}
+function story(id){
+ var lines=narrative[id];if(!lines)return;
+ st.seen.push(id);if(id==="desk")st.flags.card=true;if(id==="window")st.flags.windowSeen=true;if(id==="mail")st.flags.letter=true;if(id==="list")st.flags.list=true;if(id==="tape")st.flags.recording=true;if(id==="pipes")st.flags.pipeClue=true;if(id==="cabinet")st.flags.file=true;if(id==="typewriter")st.flags.signature=true;
+ save();playSound("paper");
+ var i=0;
+ function next(){if(i>=lines.length){hideModal();if(id==="desk"&&st.flags.windowSeen)subtitle("АРХИВ","В комнате стало на один звук меньше.",4000);return}var line=lines[i++];$("mTag").textContent="ДОМ 17 · "+names[Math.floor(st.x/ROOM)];$("mTitle").textContent=line[0];$("mText").textContent=line[1];$("mChoices").innerHTML="";$("mActions").innerHTML="";var b=document.createElement("button");b.className="secondary";b.textContent=i<lines.length?"ДАЛЬШЕ":"ЗАКРЫТЬ";b.onclick=next;$("mActions").appendChild(b);$("modal").classList.add("show");subtitle(line[0],line[1],5000)}
  next()
 }
-function puzzle(){var n=0;var box=document.createElement("div");box.className="choiceList";var out=document.createElement("div");out.style.cssText="margin-top:15px;color:#d9ed9a;font-size:11px;letter-spacing:.12em";out.textContent="ИМПУЛЬСЫ: —";[1,2,3].forEach(function(i){var b=document.createElement("button");b.className="choice";b.textContent=["ИМПУЛЬС I · короткий","ИМПУЛЬС II · короткий","ИМПУЛЬС III · короткий"][i-1];b.onclick=function(){n++;out.textContent="ИМПУЛЬСЫ: "+("● ".repeat(n))+(n===3?"··· пауза ···": "");if(n===3){b.textContent="ПАУЗА · удерживать";b.onclick=function(){n=4;out.textContent="ИМПУЛЬСЫ: ● ● ●  —";b.textContent="ИМПУЛЬС IV · длинный";b.onclick=function(){n=5;setTimeout(function(){s.flags.power=true;save();closeCard();setLine("СИСТЕМА","Генератор оживает. На секунду весь город становится виден в окнах.");playChime();toast("ПИТАНИЕ ВОССТАНОВЛЕНО");$("objective").textContent="Вернуться к вышке. Прослушать запись."},400)}}}};box.appendChild(b)});$("cardTag").textContent="ЗАПИСЬ 04 · МИША";$("cardTitle").textContent="ПОСЛЕДОВАТЕЛЬНОСТЬ";$("cardText").textContent="У Миши был способ проверять, что рация жива. Три коротких импульса. Пауза. Один длинный. Выполни сигнал в правильном ритме.";var ch=$("choices");ch.innerHTML="";ch.appendChild(box);ch.appendChild(out);$("cardActions").innerHTML="";var cancel=document.createElement("button");cancel.className="secondary";cancel.textContent="ОТМЕНА";cancel.onclick=closeCard;$("cardActions").appendChild(cancel);$("card").hidden=false}
-function tunePuzzle(){$("cardTag").textContent="ЗАПИСЬ 05 · НАСТРОЙКА";$("cardTitle").textContent="НАЙТИ ЧАСТОТУ";$("cardText").textContent="Слабый сигнал проходит сквозь шум. Поверни шкалу и поймай станцию, где слышен ответ города. Подсказка на корпусе: 104.6 МГц.";var list=document.createElement("div");list.className="choiceList";["87.3 МГц","104.6 МГц","102.7 МГц"].forEach(function(f,i){var b=document.createElement("button");b.className="choice";b.textContent="◌   "+f;b.onclick=function(){if(i===1){s.flags.tuned=true;save();playChime();$("cardText").textContent="Шум отступает. Сначала слышен один голос. Потом второй, третий, целая улица тихо отвечает Мише его же мелодией.";list.innerHTML="";var go=document.createElement("button");go.className="primary";go.textContent="ПЕРЕДАТЧИК НАСТРОЕН →";go.onclick=function(){endingChoice()};$("cardActions").innerHTML="";$("cardActions").appendChild(go)}else{$("cardText").textContent="Только сухое шипение. Частота чистая, но там никого нет. Попробуй ещё раз."}};list.appendChild(b)});$("choices").innerHTML="";$("choices").appendChild(list);$("cardActions").innerHTML="";$("card").hidden=false}
-function endingChoice(){var seq=scripts.transmit;var body=seq.map(function(a){return a[0]+": "+a[1]}).join("\n\n");$("cardTag").textContent="ЗАПИСЬ 05 · ПОСЛЕДНИЙ СИГНАЛ";$("cardTitle").textContent="ЧТО ОСТАНЕТСЯ?";$("cardText").textContent=body;$("choices").innerHTML="";var list=document.createElement("div");list.className="choiceList";[
- ["Передать голос Миши всему городу","Запись станет общей памятью. Ты услышишь её в чужих окнах, на крышах, в новых домах."],
- ["Оставить запись у себя","Его голос останется только твоим. Никто не сможет превратить его в лозунг или последнее слово."],
- ["Стереть кассету и передать тишину","Городу не нужен ещё один приказ из прошлого. Иногда любовь — это позволить голосу закончиться."]
-].forEach(function(pair,i){var b=document.createElement("button");b.className="choice";b.innerHTML="<b>"+pair[0]+"</b><br><span style='color:#87958c'>"+pair[1]+"</span>";b.onclick=function(){finish(i)};list.appendChild(b)});$("choices").appendChild(list);$("cardActions").innerHTML="";$("card").hidden=false}
-function finish(i){s.done=true;s.ending=i;save();var titles=["ГОРОД ОТВЕЧАЕТ","ТИШИНА ДЛЯ ДВОИХ","ПЕРВАЯ ПАУЗА"],texts=[
-"Ты нажимаешь передачу. Сначала ничего. Потом в окнах загораются крошечные огни — не электрические, люди зажигают свечи. Кто-то повторяет последнюю ноту Миши. Её подхватывают с улицы на улицу, пока голос не растворяется в живых голосах.\n\nЧерез неделю на площади посадят рябину из твоих семян. Ты не услышишь брата снова. Но теперь его голос принадлежит не смерти, а тем, кто продолжает жить.",
-"Ты выключаешь передатчик. Кассету берёшь с собой. Дома ставишь её рядом с фотографией, не включая. Город останется без этого голоса, зато у тебя останется его смех между словами — то, чего запись не сохранила.\n\nУтром ты отдашь семена соседскому мальчику. Он спросит, вырастет ли дерево. Ты скажешь: «Не знаю. Но давай попробуем».",
-"Ты стираешь ленту. Передаёшь тишину — длинную, ровную, без слов. Кто-то в городе отвечает колокольчиком. Потом ещё один человек стучит ложкой по кружке. Звук идёт по крышам, и ты понимаешь: тишина — не отсутствие голоса. Это место, где может начаться свой.\n\nВ кармане лежит кассета без записи. Ты оставляешь её на крыше, под рябиной в жестяной банке."
-];$("cardTag").textContent="ПОСЛЕДНЯЯ ЗАПИСЬ · "+(i+1)+" / 3";$("cardTitle").textContent=titles[i];$("cardText").textContent=texts[i]+"\n\n\nКОНЕЦ";$("choices").innerHTML="";$("cardActions").innerHTML="";var b=document.createElement("button");b.className="primary";b.textContent="ОСТАТЬСЯ НА КРЫШЕ";b.onclick=function(){closeCard();setLine("ЛЕНА","Ветер продолжает идти на юг. Впервые это не кажется бегством.");$("objective").textContent="История завершена. Нажми «Сохранить» или начни заново через перезагрузку.";};$("cardActions").appendChild(b);$("card").hidden=false;setLine("СИСТЕМА","Передача завершена.");playChime()}
-function nearest(){var a=chapters[s.room].objects,best=null,bd=999;for(var i=0;i<a.length;i++){var d=Math.hypot(s.p.x-a[i].x,s.p.y-a[i].y);if(d<34&&d<bd){best=a[i];bd=d}}near=best;$("prompt").textContent=best?"E  ·  "+best.label.toUpperCase():"";$("prompt").classList.toggle("show",!!best)}
-function move(dx,dy){if(!s.started||s.done||!$("card").hidden)return;var now=performance.now();if(now-lastMove<55)return;lastMove=now;s.p.x=Math.max(24,Math.min(360,s.p.x+dx));s.p.y=Math.max(51,Math.min(185,s.p.y+dy));if(dx)s.p.dir=dx>0?1:-1;if(s.p.x>347){if(s.room===0)doInteract("door");else if(s.room<4)doInteract("exit");else s.p.x=347}nearest()}
-function draw(){var p=palettes[s.room],room=s.room;x.clearRect(0,0,384,216);x.fillStyle=p.sky;x.fillRect(0,0,384,216);
- // distant landscape
- x.fillStyle=p.dark;x.beginPath();x.moveTo(0,91);for(var i=0;i<10;i++)x.lineTo(i*45,60+Math.sin(i*12+tick*.00015)*11);x.lineTo(384,105);x.lineTo(384,216);x.lineTo(0,216);x.fill();
- // far windows and stars
- for(var j=0;j<25;j++){var sx=(j*67+19)%380,sy=(j*31+21)%66;x.fillStyle=j%5===0?"#d9ed9a55":"#dce5d622";x.fillRect(sx,sy,1+(j%3===0),1+(j%3===0))}
- // silhouettes tailored to each chapter
- if(room===0){x.fillStyle="#303c35";x.fillRect(0,37,384,15);x.fillRect(12,52,91,76);x.fillRect(106,44,99,84);x.fillRect(211,50,86,78);x.fillRect(304,34,80,94);for(var k=0;k<7;k++){x.fillStyle="#b89c6b";x.fillRect(23+k*49,63+(k%2)*13,18,24);x.fillStyle="#e6cb8c";x.globalAlpha=.35+Math.sin(tick*.002+k)*.13;x.fillRect(26+k*49,66+(k%2)*13,12,18);x.globalAlpha=1}x.fillStyle="#676b58";x.fillRect(0,127,384,89);x.fillStyle="#9b9875";x.fillRect(0,127,384,2)}
- if(room===1){x.fillStyle="#66756a";for(var tr=0;tr<5;tr++){var tx=20+tr*80;x.fillRect(tx,49,3,92);x.fillRect(tx-19,67,42,4);x.fillRect(tx-12,57,27,4)}for(var sn=0;sn<32;sn++){x.fillStyle="#c0c9b955";x.fillRect((sn*37+tick*.015)%384,(sn*53)%135,1,2)}x.fillStyle="#777767";x.fillRect(0,133,384,83)}
- if(room===2){x.fillStyle="#4b5558";x.fillRect(0,39,384,20);for(var col=0;col<9;col++){x.fillStyle="#687276";x.fillRect(col*48+3,59,4,62);x.fillStyle="#222a2e";x.fillRect(col*48+7,61,34,61)}x.fillStyle="#667173";x.fillRect(0,122,384,94);x.fillStyle="#bac3ac";x.fillRect(0,122,384,2);for(var tile=0;tile<10;tile++)x.fillRect(tile*41,158+(tile%2)*5,20,1)}
- if(room===3){x.fillStyle="#55554b";x.fillRect(0,41,384,73);x.fillStyle="#292e29";x.fillRect(51,54,280,49);x.fillStyle="#afa47c";x.fillRect(57,59,268,38);x.fillStyle="#777969";x.fillRect(0,114,384,102);for(var desk=0;desk<5;desk++){x.fillStyle="#594d3c";x.fillRect(24+desk*71,132+(desk%2)*24,48,20);x.fillStyle="#8a7054";x.fillRect(20+desk*71,129+(desk%2)*24,56,4)}}
- if(room===4){x.fillStyle="#5d7065";x.fillRect(0,51,384,5);x.fillRect(31,55,3,39);x.fillRect(350,55,3,47);x.fillStyle="#7f9b82";x.fillRect(183,20,4,77);x.fillRect(161,34,48,3);x.fillRect(170,46,30,2);x.fillStyle="#45584d";x.fillRect(0,98,384,118);x.fillStyle="#252e2a";x.fillRect(0,96,384,3);for(var wi=0;wi<10;wi++){x.fillStyle="#d9ed9a";x.globalAlpha=.2+Math.sin(tick*.001+wi)*.12;x.fillRect((wi*43+tick*.009)%384,108+(wi*29)%60,2,2);x.globalAlpha=1}}
- // floor details
- var floor=p.ground;x.fillStyle=floor;x.fillRect(0,143,384,73);x.fillStyle="#ffffff08";for(var yy=148;yy<216;yy+=12)for(var xx=0;xx<384;xx+=24)x.fillRect(xx+((yy/12)%2)*12,yy,11,1);
- // room landmarks objects
- chapters[room].objects.forEach(function(o,i){if(o.id==="door"||o.id==="exit")return;objectArt(o,i,p)});
- // player shadow and pixel character
- var px=Math.round(s.p.x),py=Math.round(s.p.y);x.fillStyle="#10151399";x.fillRect(px-6,py+5,13,3);x.fillStyle="#303c36";x.fillRect(px-5,py-8,10,14);x.fillStyle="#d0b69a";x.fillRect(px-4,py-15,8,8);x.fillStyle="#6c796d";x.fillRect(px-5,py-16,10,4);x.fillStyle="#d9ed9a";x.fillRect(px+(s.p.dir>0?2:-3),py-12,2,2);x.fillStyle="#765b4c";x.fillRect(px-4,py+5,3,3);x.fillRect(px+2,py+5,3,3);
- // warm pool light
- var g=x.createRadialGradient(px,py,5,px,py,85);g.addColorStop(0,"#e7d9a00e");g.addColorStop(1,"#e7d9a000");x.fillStyle=g;x.fillRect(px-85,py-85,170,170);
- tick++;requestAnimationFrame(draw)}
-function objectArt(o,i,p){var a=o.x,b=o.y;x.fillStyle="#111815";x.fillRect(a-12,b+9,25,3);if(o.id==="radio"){x.fillStyle="#4c5a50";x.fillRect(a-13,b-9,26,18);x.fillStyle="#16201b";x.fillRect(a-9,b-6,13,9);x.fillStyle="#d9ed9a";x.fillRect(a-7,b-3,8,1);x.fillStyle="#9a8f68";x.fillRect(a+6,b-5,4,6)}
- else if(o.id==="photo"){x.fillStyle="#b4ae8c";x.fillRect(a-9,b-9,18,15);x.fillStyle="#677669";x.fillRect(a-6,b-6,5,5);x.fillRect(a+1,b-5,5,6)}
- else if(o.id==="window"){x.fillStyle="#859b8c";x.fillRect(a-13,b-12,26,24);x.fillStyle="#263633";x.fillRect(a-10,b-9,20,18);x.fillStyle="#d9ed9a";x.fillRect(a+5,b-4,2,2)}
- else if(o.id==="tree"){x.fillStyle="#765846";x.fillRect(a-2,b-16,4,29);x.fillStyle="#718472";x.fillRect(a-12,b-20,25,8);x.fillStyle="#d46f61";x.fillRect(a-9,b-12,2,2);x.fillRect(a+7,b-15,2,2)}
- else if(o.id==="bench"){x.fillStyle="#8a7153";x.fillRect(a-15,b-4,30,3);x.fillRect(a-12,b,3,8);x.fillRect(a+10,b,3,8)}
- else if(o.id==="memorial"){x.fillStyle="#889187";x.fillRect(a-15,b-17,30,28);x.fillStyle="#5f695f";for(var i=0;i<4;i++)x.fillRect(a-9,b-11+i*5,18,1)}
- else if(o.id==="machine"){x.fillStyle="#7d8580";x.fillRect(a-11,b-16,22,28);x.fillStyle="#263631";x.fillRect(a-7,b-12,14,9);x.fillStyle="#a5b78c";x.fillRect(a-4,b+4,8,3)}
- else if(o.id==="turnstile"){x.fillStyle="#90988b";x.fillRect(a-2,b-12,4,21);x.fillRect(a-12,b-5,24,3)}
- else if(o.id==="map"||o.id==="blackboard"){x.fillStyle="#8d927e";x.fillRect(a-18,b-13,36,23);x.fillStyle="#384439";x.fillRect(a-15,b-10,30,17);for(var j=0;j<3;j++)x.fillRect(a-10+j*6,b-7+j*3,12,1)}
- else if(o.id==="desk"){x.fillStyle="#876d4d";x.fillRect(a-15,b-5,30,5);x.fillRect(a-12,b,3,10);x.fillRect(a+9,b,3,10)}
- else if(o.id==="piano"){x.fillStyle="#191e1b";x.fillRect(a-16,b-11,32,20);x.fillStyle="#c5c5ab";for(var q=0;q<7;q++)x.fillRect(a-13+q*4,b-4,3,10);x.fillStyle="#333a33";x.fillRect(a-13,b-11,26,6)}
- else if(o.id==="generator"){x.fillStyle="#777f70";x.fillRect(a-14,b-12,28,23);x.fillStyle="#252e29";x.fillRect(a-10,b-8,20,9);x.fillStyle=s.flags.power?"#d9ed9a":"#b56552";x.fillRect(a+5,b-5,2,2)}
- else if(o.id==="antenna"){x.fillStyle="#b1bba3";x.fillRect(a-1,b-25,2,31);x.fillRect(a-11,b-20,22,2);x.fillRect(a-7,b-11,14,2)}
- else if(o.id==="recorder"){x.fillStyle="#7e7560";x.fillRect(a-14,b-8,28,17);x.fillStyle="#202521";x.fillRect(a-9,b-5,18,7);x.fillStyle="#cf8065";x.fillRect(a-2,b-3,4,3)}
- else {x.fillStyle="#68796a";x.fillRect(a-12,b-15,24,27);x.fillStyle="#202722";x.fillRect(a-8,b-10,16,11);x.fillStyle="#d9ed9a";x.fillRect(a-4,b+5,8,2)}
+function puzzle(key){var p=puzzles[key];if(!p)return;showModal(p.tag,p.title,p.text,p.answers.map(function(answer,i){return {text:answer,run:function(){if(i===p.correct){st.flags[p.flag]=true;st.facts.push(p.flag);save();hideModal();playSound("success");subtitle("СИСТЕМА","В памяти щёлкнуло реле. Где-то этажом выше открылась дверь.",4800);toast("ЗАПИСЬ ВОССТАНОВЛЕНА")}else{playSound("wrong");$("mText").textContent="Нет. Запись не сходится. Подумай, что именно ты видела и что написано на бумаге.";}}}}),[{text:"НАЗАД",run:hideModal}])}
+function ending(){
+ var complete=st.flags.observed&&st.flags.dateFound&&st.flags.lineRestored&&st.flags.valve;
+ var all=st.flags.letter&&st.flags.recording&&st.flags.file&&st.flags.signature;
+ showModal("ДОМ 17 · УТРО","ПОСЛЕДНЯЯ ГРАФА","На столе три пустые строки. Впервые никто не диктует, чем их заполнить.\n\nСнаружи начинает сереть. Голоса за стеной не просят спасти их. Они просят не превращать отсутствие записи в доказательство отсутствия.",[
+ {text:"ВПИСАТЬ ИМЕНА В ОБЩИЙ РЕЕСТР",run:function(){finish("public",complete,all)}},
+ {text:"ОСТАВИТЬ АДРЕС ТОЛЬКО НА БУМАГЕ",run:function(){finish("private",complete,all)}},
+ {text:"НЕ СТАВИТЬ ПОДПИСЬ",run:function(){finish("blank",complete,all)}}
+ ],[{text:"ОСТАТЬСЯ ЕЩЁ НА МИНУТУ",run:function(){hideModal();subtitle("АРХИВАРИУС","Ты слушаешь. На этот раз не обещая, что ответишь.",5000)}}]);
 }
-function audioStart(){if(audio){audio.resume();return}try{audio=new(window.AudioContext||window.webkitAudioContext)();master=audio.createGain();master.gain.value=.55;master.connect(audio.destination);
- var buffer=audio.createBuffer(1,audio.sampleRate*3,audio.sampleRate),data=buffer.getChannelData(0);for(var i=0;i<data.length;i++)data[i]=Math.random()*2-1;
- noiseNode=audio.createBufferSource();noiseNode.buffer=buffer;noiseNode.loop=true;var low=audio.createBiquadFilter();low.type="lowpass";low.frequency.value=230;var ng=audio.createGain();ng.gain.value=.026;noiseNode.connect(low);low.connect(ng);ng.connect(master);noiseNode.start();
- var notes=[110,164.81,196,146.83,130.81,174.61,220,164.81];function pulse(){if(!audio)return;var t=audio.currentTime,n=notes[musicStep++%notes.length];var o=audio.createOscillator(),f=audio.createBiquadFilter(),g=audio.createGain();o.type="triangle";o.frequency.value=n;f.type="lowpass";f.frequency.value=520;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.045,t+.3);g.gain.exponentialRampToValueAtTime(.0001,t+2.1);o.connect(f);f.connect(g);g.connect(master);o.start(t);o.stop(t+2.2);var sub=audio.createOscillator(),sg=audio.createGain();sub.type="sine";sub.frequency.value=n/2;sg.gain.setValueAtTime(.0001,t);sg.gain.exponentialRampToValueAtTime(.025,t+.3);sg.gain.exponentialRampToValueAtTime(.0001,t+2.5);sub.connect(sg);sg.connect(master);sub.start(t);sub.stop(t+2.6);tick++}pulse();loop=setInterval(pulse,1900)}catch(e){toast("Аудио не поддерживается этим браузером")}}
-function audioStop(){if(loop)clearInterval(loop);loop=null;if(audio){audio.close().catch(function(){});audio=null;master=null;noiseNode=null}}
-function playChime(){if(!audio||!s.sound)return;[196,246.94,293.66,392].forEach(function(f,i){var o=audio.createOscillator(),g=audio.createGain(),t=audio.currentTime+i*.16;o.type="sine";o.frequency.value=f;g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.025);g.gain.exponentialRampToValueAtTime(.0001,t+.9);o.connect(g);g.connect(master);o.start(t);o.stop(t+1)})}
-function loopKeys(){if(!s.started||!$("card").hidden)return;var d=2.5;if(held.ArrowUp||held.w||held.W)move(0,-d);if(held.ArrowDown||held.s||held.S)move(0,d);if(held.ArrowLeft||held.a||held.A)move(-d,0);if(held.ArrowRight||held.d||held.D)move(d,0);requestAnimationFrame(loopKeys)}
-window.addEventListener("keydown",function(e){var k=e.key;if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(k)>=0)e.preventDefault();if(k==="Escape"&&!$("card").hidden){closeCard();return}if(k==="Escape"&&s.started){sayCard("ПАУЗА","ПУТЬ НА ВДОХЕ","Прогресс сохраняется автоматически. Ветер никуда не уйдёт.",[{label:"ПРОДОЛЖИТЬ",primary:true,run:closeCard},{label:"СОХРАНИТЬ",run:function(){save();closeCard();toast("ЗАПИСЬ СОХРАНЕНА")}}]);return}held[k]=true;if((k==="e"||k==="E"||k===" "||k==="Enter")&&$("card").hidden&&near)doInteract(near.id)});
-window.addEventListener("keyup",function(e){held[e.key]=false});
-$("world").addEventListener("pointerdown",function(e){if(!s.started)return;var r=c.getBoundingClientRect(),px=(e.clientX-r.left)/r.width*384,py=(e.clientY-r.top)/r.height*216,best=null,bd=999;chapters[s.room].objects.forEach(function(o){var d=Math.hypot(px-o.x,py-o.y);if(d<36&&d<bd){best=o;bd=d}});if(best){if(Math.hypot(s.p.x-best.x,s.p.y-best.y)<42)doInteract(best.id);else{s.p.x=best.x+(s.p.x<best.x?-20:20);s.p.y=best.y+15;nearest()}}});
-$("begin").onclick=function(){start()};$("sound").onclick=function(){s.sound=!s.sound;$("sound").textContent="♫ ЗВУК: "+(s.sound?"ВКЛ":"ВЫКЛ");$("sound").classList.toggle("on",s.sound);if(s.sound)audioStart();else audioStop();save()};$("full").onclick=async function(){try{if(!document.fullscreenElement)await app.requestFullscreen();else await document.exitFullscreen()}catch(e){toast("Полноэкранный режим недоступен")}};document.addEventListener("fullscreenchange",function(){$("full").textContent=document.fullscreenElement?"⛶ ВЫЙТИ":"⛶ ЭКРАН"});
-$("save").onclick=function(){save();toast("ЗАПИСЬ СОХРАНЕНА")};$("restart").onclick=function(){if(confirm("Начать историю сначала? Сохранение будет удалено.")){localStorage.removeItem("last-light-save");location.reload()}};
-document.querySelectorAll("[data-move]").forEach(function(b){var key=b.dataset.move;b.addEventListener("pointerdown",function(e){e.preventDefault();held[key]=true});["pointerup","pointerleave","pointercancel"].forEach(function(ev){b.addEventListener(ev,function(){held[key]=false})})});
-if(load()){$("start").style.display="none";$("chapter").textContent=chapters[s.room].tag;$("place").textContent=chapters[s.room].name;$("objective").textContent=["Осмотреть приёмник и найти кассету.","Найти старый переулок через двор.","Найти путь к школе.","Подать питание на крышу.","Настроить передатчик и выбрать, что отправить."][s.room];setLine("ЗАПИСЬ","Старая запись загружена. Иди дальше.");if(s.sound)audioStart()}
-requestAnimationFrame(draw);requestAnimationFrame(loopKeys);
+function finish(kind,complete,all){
+ st.finished=true;st.ending=kind;st.flags.fullTruth=complete&&all;save();
+ var title,text;
+ if(kind==="public"){title="АДРЕС ВОЗВРАЩЁН";text=complete&&all?"Ты вписываешь Яну и Соню в общий реестр. Через месяц к дому приходят не чиновники, а люди с фотографиями и копиями старых писем. Список не возвращает прожитые годы. Но теперь никто не может назвать их выдумкой.\n\nВ новой графе ты оставляешь пустое место после фамилии: не для ошибки — для тех, кого ещё не нашли.":"Ты публикуешь список. В нём есть имена, но не хватает дат и свидетельств. Город впервые спорит о доме 17. Это не справедливость, но спор уже нельзя закрыть одной подписью."}
+ else if(kind==="private"){title="ТИХАЯ КОПИЯ";text=complete?"Ты переписываешь адреса в тетрадь без обложки и прячешь её под половицей. На следующий вечер возле архива ждёт женщина с мокрым конвертом. Она не спрашивает, веришь ли ты ей. Она называет фамилии по порядку.":"Ты сохраняешь несколько имён, но часть листов остаётся пустой. Человек, который найдёт тетрадь, не узнает, почему ты выбрала именно их."}
+ else{title="НЕЗАКРЫТОЕ ДЕЛО";text=all?"Ты не подписываешь бумагу. Ничего не стираешь и ничего не подтверждаешь. Утром в архиве остаётся дело, которое нельзя подшить ни к живым, ни к пропавшим. Яна однажды сможет найти этот след — если будет искать.":"Ты отказываешься поставить подпись. Бумагу забирают вместе с остальными делами. В реестре остаётся ноль. Но ты впервые понимаешь: молчание тоже может быть чьим-то решением."}
+ showModal("ДОМ 17 · "+(complete?"СВИДЕТЕЛЬСТВА СОБРАНЫ":"НЕ ВСЕ СЛЕДЫ НАЙДЕНЫ"),title,text+"\\n\\nКОНЕЦ",null,[{text:"ЗАКРЫТЬ",primary:true,run:function(){hideModal();subtitle("АРХИВ","Ночная смена окончена.",6000)}}]);playSound("ending");
+}
+function finishChapterGate(z){if(z===0&&!st.flags.observed)return "Сначала посмотри на окна во дворе. Между огнями есть ритм.";if(z===1&&!st.flags.dateFound)return "Письмо и список лежат рядом. Даты должны сойтись.";if(z===2&&!st.flags.lineRestored)return "Линия не соединена. Вспомни порядок на крышке коммутатора.";if(z===3&&!st.flags.valve)return "Клапан ждёт ритм из трубы.";return null}
+function interact(obj){
+ if(!obj)return;
+ if(obj.id==="desk"){story("desk");return}
+ if(obj.id==="window"&&Math.floor(st.x/ROOM)===0){story("window");return}
+ if(obj.id==="clock"){story("clock");return}
+ if(obj.id==="phone"){story("phone");return}
+ if(obj.id==="mail"){story("mail");return}
+ if(obj.id==="door"){story("door");return}
+ if(obj.id==="shoes"){story("shoes");return}
+ if(obj.id==="lift"){if(!st.flags.dateFound){subtitle("АРХИВАРИУС","Кнопки не отвечают. Сначала сверить письмо со списком.",5000);playSound("wrong");return}story("lift");return}
+ if(obj.id==="list"){story("list");return}
+ if(obj.id==="board"){if(!st.flags.letter||!st.flags.list){subtitle("АРХИВАРИУС","Нужны письмо и реестр. Коммутатор не соединяет догадки.",5000);return}if(!st.flags.lineRestored){puzzle("switch");return}story("board");return}
+ if(obj.id==="tape"){story("tape");return}
+ if(obj.id==="pipes"){story("pipes");return}
+ if(obj.id==="boiler"){if(!st.flags.pipeClue){subtitle("АРХИВАРИУС","Сначала послушай трубу.",4000);return}if(!st.flags.valve){puzzle("sound");return}story("boiler");return}
+ if(obj.id==="mirror"){story("mirror");return}
+ if(obj.id==="cabinet"){story("cabinet");return}
+ if(obj.id==="typewriter"){story("typewriter");return}
+ if(obj.id==="window2"){story("window2");return}
+ if(obj.id==="send"){if(!st.flags.file||!st.flags.signature){subtitle("АРХИВАРИУС","В ящике ещё остались две незакрытые записи.",4200);return}ending();return}
+}
+function art(o,sx,z){
+ var x=sx,y=o.y;
+ ctx.fillStyle="#090b0b";ctx.fillRect(x-13,y+10,26,3);
+ switch(o.type){
+ case"desk":ctx.fillStyle="#544c42";ctx.fillRect(x-22,y-9,44,5);ctx.fillRect(x-18,y-4,4,15);ctx.fillRect(x+14,y-4,4,15);ctx.fillStyle="#aaa18d";ctx.fillRect(x-11,y-17,20,12);ctx.fillStyle="#5b554a";ctx.fillRect(x-8,y-14,12,1);ctx.fillRect(x-8,y-10,9,1);break;
+ case"window":ctx.fillStyle="#667178";ctx.fillRect(x-20,y-22,40,34);ctx.fillStyle="#172025";ctx.fillRect(x-16,y-18,32,26);ctx.fillStyle="#3b4649";ctx.fillRect(x-1,y-18,2,27);ctx.fillRect(x-16,y-3,32,2);ctx.fillStyle=st.flags.observed?"#a65048":"#d0c7ad";ctx.fillRect(x+7,y-12,3,3);break;
+ case"clock":ctx.fillStyle="#77736a";ctx.fillRect(x-13,y-14,26,28);ctx.fillStyle="#171b1b";ctx.fillRect(x-10,y-11,20,22);ctx.fillStyle="#c9c0a6";ctx.fillRect(x-1,y-8,2,8);ctx.fillRect(x-1,y-1,7,2);break;
+ case"phone":ctx.fillStyle="#363b3b";ctx.fillRect(x-15,y-8,30,18);ctx.fillStyle="#141919";ctx.fillRect(x-11,y-6,22,8);ctx.fillStyle="#927e67";ctx.fillRect(x-14,y-12,28,4);ctx.fillRect(x-4,y-3,8,2);break;
+ case"mail":ctx.fillStyle="#a39a84";ctx.fillRect(x-14,y-9,28,18);ctx.fillStyle="#59574e";ctx.beginPath();ctx.moveTo(x-13,y-8);ctx.lineTo(x,y+1);ctx.lineTo(x+13,y-8);ctx.stroke();ctx.fillStyle="#8d4d48";ctx.fillRect(x+6,y-7,3,3);break;
+ case"door":ctx.fillStyle="#57534a";ctx.fillRect(x-15,y-25,30,39);ctx.fillStyle="#171b1b";ctx.fillRect(x-11,y-21,22,32);ctx.fillStyle="#9d554d";ctx.fillRect(x+7,y-3,2,2);ctx.fillStyle="#817a68";ctx.fillRect(x-15,y-25,30,2);break;
+ case"shoes":ctx.fillStyle="#604e43";ctx.fillRect(x-15,y-7,12,7);ctx.fillRect(x+4,y-10,12,7);ctx.fillStyle="#a1967e";ctx.fillRect(x-13,y-9,7,2);ctx.fillRect(x+6,y-12,7,2);break;
+ case"lift":ctx.fillStyle="#626360";ctx.fillRect(x-18,y-24,36,38);ctx.fillStyle="#171b1a";ctx.fillRect(x-14,y-20,28,32);ctx.fillStyle="#a4544c";ctx.fillRect(x-2,y-15,5,2);ctx.fillStyle="#77766f";ctx.fillRect(x-1,y-13,2,20);break;
+ case"list":ctx.fillStyle="#4b4b44";ctx.fillRect(x-20,y-18,40,28);ctx.fillStyle="#afa68f";ctx.fillRect(x-16,y-15,32,22);ctx.fillStyle="#514d44";for(var j=0;j<5;j++)ctx.fillRect(x-12,y-11+j*4,22-(j%2)*6,1);ctx.fillStyle="#9d544d";ctx.fillRect(x+6,y-14,2,2);break;
+ case"board":ctx.fillStyle="#555a56";ctx.fillRect(x-26,y-19,52,30);ctx.fillStyle="#171d1c";ctx.fillRect(x-22,y-15,44,22);ctx.fillStyle="#a98c73";for(var k=0;k<4;k++){ctx.fillRect(x-17+k*10,y-10,4,4);ctx.fillRect(x-16+k*10,y+1,2,4)}ctx.strokeStyle="#8c8071";ctx.beginPath();ctx.moveTo(x-14,y-7);ctx.bezierCurveTo(x,y+3,x+2,y-14,x+15,y+3);ctx.stroke();break;
+ case"tape":ctx.fillStyle="#484d49";ctx.fillRect(x-18,y-12,36,24);ctx.fillStyle="#131817";ctx.fillRect(x-14,y-8,28,16);ctx.fillStyle="#a59881";ctx.fillRect(x-9,y-3,7,7);ctx.fillRect(x+3,y-3,7,7);ctx.fillStyle="#9c5148";ctx.fillRect(x-1,y-1,3,3);break;
+ case"pipes":ctx.fillStyle="#69716a";ctx.fillRect(x-19,y-25,4,48);ctx.fillRect(x-18,y-5,40,4);ctx.fillRect(x+18,y-20,4,35);ctx.fillStyle="#343a37";ctx.fillRect(x-21,y-13,8,4);ctx.fillRect(x+14,y+6,8,4);break;
+ case"boiler":ctx.fillStyle="#555c57";ctx.fillRect(x-20,y-24,40,36);ctx.fillStyle="#202625";ctx.fillRect(x-14,y-19,28,25);ctx.fillStyle="#9b554a";ctx.fillRect(x+7,y-15,3,3);ctx.fillStyle="#8a8876";ctx.beginPath();ctx.arc(x,y-6,7,0,Math.PI*2);ctx.stroke();ctx.fillRect(x-1,y-14,2,9);break;
+ case"mirror":ctx.fillStyle="#797b73";ctx.fillRect(x-15,y-22,30,34);ctx.fillStyle="#242b2a";ctx.fillRect(x-12,y-19,24,28);ctx.fillStyle="#8c7771";ctx.fillRect(x-4,y-14,7,19);break;
+ case"cabinet":ctx.fillStyle="#534e45";ctx.fillRect(x-22,y-24,44,38);ctx.fillStyle="#777263";for(var d=0;d<4;d++){ctx.fillRect(x-18,y-20+d*8,36,6);ctx.fillStyle="#393a36";ctx.fillRect(x+9,y-18+d*8,2,2);ctx.fillStyle="#777263"}break;
+ case"typewriter":ctx.fillStyle="#333a37";ctx.fillRect(x-21,y-12,42,23);ctx.fillStyle="#908a78";ctx.fillRect(x-15,y-19,29,12);ctx.fillStyle="#191d1b";ctx.fillRect(x-14,y-17,27,9);for(var q=0;q<5;q++)ctx.fillRect(x-14+q*6,y-4,3,3);break;
+ case"send":ctx.fillStyle="#55534b";ctx.fillRect(x-22,y-20,44,34);ctx.fillStyle="#141817";ctx.fillRect(x-17,y-13,34,8);ctx.fillStyle="#ad554b";ctx.fillRect(x-7,y-8,14,2);ctx.fillStyle="#99917d";ctx.fillRect(x-19,y+7,38,2);break;
+ }
+}
+function drawRoom(z,cam){
+ var base=z*ROOM-cam, p=palette[z],t=elapsed;
+ // layered distant view
+ ctx.fillStyle=p.wall;ctx.fillRect(base,0,ROOM,H);
+ ctx.fillStyle="#0e1213";ctx.fillRect(base,0,ROOM,35);
+ ctx.fillStyle="#353938";ctx.fillRect(base+12,37,ROOM-24,5);
+ // wall fixtures and texture
+ if(z===0){for(var i=0;i<6;i++){var fx=base+22+i*86;ctx.fillStyle="#3c4240";ctx.fillRect(fx,48,62,70);ctx.fillStyle="#181d1d";ctx.fillRect(fx+5,53,52,58);ctx.fillStyle="#8a7d66";ctx.globalAlpha=.17+Math.sin(t*.002+i)*.04;ctx.fillRect(fx+12,65,34,33);ctx.globalAlpha=1;ctx.fillStyle="#4f514a";for(var a=0;a<6;a++)ctx.fillRect(fx+10,120+a*7,42,2)}}
+ if(z===1){for(var j=0;j<4;j++){var dx=base+36+j*120;ctx.fillStyle="#484744";ctx.fillRect(dx,48,75,94);ctx.fillStyle="#191d1c";ctx.fillRect(dx+7,55,60,80);ctx.fillStyle="#777063";ctx.fillRect(dx+10,62,54,2);ctx.fillStyle="#a54f48";ctx.fillRect(dx+55,98,3,3)}ctx.fillStyle="#292e2c";ctx.fillRect(base+3,60,28,66);ctx.fillRect(base+3,130,80,7)}
+ if(z===2){ctx.fillStyle="#424746";ctx.fillRect(base+10,44,ROOM-20,17);for(var n=0;n<8;n++){ctx.fillStyle="#161c1d";ctx.fillRect(base+25+n*61,65,48,57);ctx.fillStyle="#626966";ctx.fillRect(base+28+n*61,68,42,2);ctx.fillStyle="#a14f49";ctx.globalAlpha=.5+Math.sin(t*.002+n)*.3;ctx.fillRect(base+32+n*61,80,2,2);ctx.globalAlpha=1}ctx.fillStyle="#373e3d";ctx.fillRect(base+18,126,ROOM-36,26)}
+ if(z===3){for(var h=0;h<5;h++){ctx.fillStyle="#58615a";ctx.fillRect(base+25+h*95,43,5,92);ctx.fillRect(base+25+h*95,76,72,5);ctx.fillStyle="#333a37";ctx.fillRect(base+28+h*95,49,2,22)}ctx.fillStyle="#414945";ctx.fillRect(base+5,145,ROOM-10,8);ctx.fillStyle="#777468";ctx.fillRect(base+0,36,ROOM,5)}
+ if(z===4){ctx.fillStyle="#323838";ctx.fillRect(base+0,45,ROOM,95);for(var r=0;r<5;r++){ctx.fillStyle="#141a1a";ctx.fillRect(base+18+r*95,53,62,76);ctx.fillStyle="#69665b";ctx.fillRect(base+22+r*95,59,54,2);ctx.fillStyle="#827866";for(var l=0;l<5;l++)ctx.fillRect(base+26+r*95,67+l*10,31+(l%2)*9,1)}}
+ // floor
+ ctx.fillStyle=p.floor;ctx.fillRect(base,145,ROOM,H-145);ctx.fillStyle="#ffffff08";for(var fy=150;fy<H;fy+=12){ctx.fillRect(base+((fy/12)%2)*13,fy,ROOM,1);for(var xx=base+20;xx<base+ROOM;xx+=47)ctx.fillRect(xx,fy,1,5)}
+ // door frames at room transitions; unbroken corridor continues through openings
+ ctx.fillStyle="#0c1010";ctx.fillRect(base+ROOM-23,105,24,69);ctx.fillStyle="#6b6a61";ctx.fillRect(base+ROOM-25,102,3,73);ctx.fillRect(base+ROOM-2,102,3,73);ctx.fillStyle="#9a5149";ctx.fillRect(base+ROOM-8,137,2,3);
+ // zone objects
+ rooms[z].forEach(function(o){var sx=o.x-cam;if(sx>-55&&sx<440)art(o,sx,z)});
+ // distant moving silhouette subtly appears after first exchange, vanishes if faced
+ if(st.flags.lineRestored&&z===1&&!st.flags.silhouetteGone){var sil=base+433;ctx.fillStyle="#101414";ctx.fillRect(sil,108,8,26);ctx.fillRect(sil+1,99,6,9);ctx.fillStyle="#9a514966";ctx.fillRect(sil+2,103,2,2)}
+}
+function drawPlayer(){
+ var sx=st.x-camera,sy=st.y;
+ ctx.fillStyle="#05070799";ctx.fillRect(sx-8,sy+5,17,4);
+ // coat
+ ctx.fillStyle="#252c2c";ctx.fillRect(sx-5,sy-13,11,18);ctx.fillRect(sx-8,sy-10,4,10);ctx.fillRect(sx+5,sy-10,4,10);
+ // head/hair
+ ctx.fillStyle="#aa9c85";ctx.fillRect(sx-4,sy-21,8,8);ctx.fillStyle="#272c29";ctx.fillRect(sx-5,sy-23,10,5);ctx.fillRect(sx-5,sy-19,2,6);
+ ctx.fillStyle="#a4544d";ctx.fillRect(sx+(st.dir>0?2:-3),sy-18,2,2);
+ ctx.fillStyle="#111615";ctx.fillRect(sx-4,sy+4,3,5);ctx.fillRect(sx+2,sy+4,3,5);
+}
+var particles=[];for(var pi=0;pi<80;pi++)particles.push({x:Math.random()*W,y:Math.random()*H,v:(.08+Math.random()*.28),s:Math.random()<.8?1:2});
+function render(now){
+ var dt=Math.min(40,now-(render.last||now));render.last=now;elapsed+=dt;
+ var z=Math.max(0,Math.min(COUNT-1,Math.floor(st.x/ROOM)));
+ if(z!==lastRoom){lastRoom=z;chapter(z);updateAmbience(z)}
+ if(st.started&&!st.finished&&!$("modal").classList.contains("show")){
+ var dx=0,dy=0;if(keys.ArrowLeft||keys.a||keys.A)dx--;if(keys.ArrowRight||keys.d||keys.D)dx++;if(keys.ArrowUp||keys.w||keys.W)dy--;if(keys.ArrowDown||keys.s||keys.S)dy++;
+ if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075;st.x+=dx/norm*speed;st.y+=dy/norm*speed;st.dir=dx>0?1:dx<0?-1:st.dir;st.x=Math.max(22,Math.min(WORLD-22,st.x));st.y=Math.max(63,Math.min(184,st.y));
+ if(Math.abs(st.x-(render.lastStepX||0))>22){render.lastStepX=st.x;stepSide++;playSound(z===3?"stepPipe":"step");}
+ var nz=Math.floor(st.x/ROOM);if(nz>z){var gate=finishChapterGate(z);if(gate){st.x=(z+1)*ROOM-35;subtitle("АРХИВАРИУС",gate,4500);playSound("wrong")}}
+ }
+ }
+ camera=Math.max(0,Math.min(WORLD-W,st.x-W*.48));
+ ctx.clearRect(0,0,W,H);
+ // scene bands and parallax
+ for(var r=Math.max(0,Math.floor(camera/ROOM));r<=Math.min(COUNT-1,Math.floor((camera+W)/ROOM));r++)drawRoom(r,camera);
+ // rain/dust move differently per zone
+ for(var pp of particles){pp.y+=pp.v*(Math.floor(st.x/ROOM)===1?2.6:0.5);pp.x-=pp.v*.6;if(pp.y>H){pp.y=0;pp.x=Math.random()*W}if(pp.x<0)pp.x=W;ctx.fillStyle=pp.s===1?"#bcc0b522":"#b6a99a33";ctx.fillRect(pp.x,pp.y,pp.s,pp.s)}
+ drawPlayer();
+ // light cone and edge darkness
+ var pz=Math.floor(st.x/ROOM);var sx=st.x-camera,light=ctx.createRadialGradient(sx,st.y-5,8,sx,st.y-5,165);light.addColorStop(0,"#d5c9a018");light.addColorStop(.36,"#d5c9a00b");light.addColorStop(1,"#030506aa");ctx.fillStyle=light;ctx.fillRect(0,0,W,H);
+ // area darkening, flicker
+ var flick=.02+Math.max(0,Math.sin(elapsed*.0043))*((pz===0||pz===2)?.045:.025);ctx.fillStyle="rgba(0,0,0,"+flick+")";ctx.fillRect(0,0,W,H);
+ // soundless silhouette changes when player looks away from landing
+ if(st.flags.lineRestored&&pz===1&&st.x%ROOM<190)st.flags.silhouetteGone=true;
+ nearest();requestAnimationFrame(render)
+}
+function nearest(){near=null;if(!st.started||!$("modal").classList.contains("show")){var arr=rooms[Math.max(0,Math.min(COUNT-1,Math.floor(st.x/ROOM)))];var bd=43;arr.forEach(function(o){var d=Math.hypot(o.x-st.x,o.y-st.y);if(d<bd){near=o;bd=d}})}if(near){$("prompt").textContent="E  ·  "+near.label;$("prompt").classList.add("show")}else $("prompt").classList.remove("show")}
+function interact(){if(!st.started||$("modal").classList.contains("show"))return;if(near){interact(near);return}var z=Math.floor(st.x/ROOM),gate=finishChapterGate(z);subtitle("АРХИВАРИУС",gate||"Только гул труб. Попробуй осмотреть вещи рядом.",4000)}
+function moveTo(x,y){st.x=x;st.y=y;nearest()}
+function playSound(name){
+ if(!audio||!st.sound)return;var now=audio.currentTime;
+ function tone(freq,dur,type,gain,slide){var o=audio.createOscillator(),g=audio.createGain(),pan=audio.createStereoPanner();o.type=type||"sine";o.frequency.setValueAtTime(freq,now);if(slide)o.frequency.exponentialRampToValueAtTime(slide,now+dur);g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(gain,now+.025);g.gain.exponentialRampToValueAtTime(.0001,now+dur);pan.pan.value=Math.max(-.9,Math.min(.9,(near?near.x-st.x:0)/120));o.connect(g);g.connect(pan);pan.connect(bus);o.start(now);o.stop(now+dur+.03)}
+ if(name==="step"){tone(stepSide%2?72:88,.12,"triangle",.045,54)}
+ else if(name==="stepPipe"){tone(stepSide%2?99:111,.14,"sine",.04,60)}
+ else if(name==="door"){tone(76,.65,"sawtooth",.09,42);setTimeout(function(){if(audio)tone(112,.32,"sine",.06,66)},120)}
+ else if(name==="paper"){tone(340,.08,"triangle",.028,210)}
+ else if(name==="wrong"){tone(92,.34,"sine",.07,71)}
+ else if(name==="success"){tone(196,.8,"sine",.065,247);setTimeout(function(){if(audio)tone(293.66,1.1,"triangle",.045,220)},180)}
+ else if(name==="ending"){tone(110,2.8,"triangle",.08,55);setTimeout(function(){if(audio)tone(164.81,2.2,"sine",.035,146)},340)}
+ else if(name==="knock"){tone(140,.2,"sine",.08,80)}
+}
+function audioStart(){
+ if(audio){audio.resume();return}
+ try{
+ audio=new(window.AudioContext||window.webkitAudioContext)();bus=audio.createGain();bus.gain.value=st.volume;bus.connect(audio.destination);
+ // textured low air, softly filtered and modulated
+ var nbuf=audio.createBuffer(1,audio.sampleRate*4,audio.sampleRate),nd=nbuf.getChannelData(0);for(var i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+ noise=audio.createBufferSource();noise.buffer=nbuf;noise.loop=true;var nf=audio.createBiquadFilter();nf.type="lowpass";nf.frequency.value=260;noiseGain=audio.createGain();noiseGain.gain.value=.07;noise.connect(nf);nf.connect(noiseGain);noiseGain.connect(bus);noise.start();
+ [41.2,55,82.4].forEach(function(f,i){var o=audio.createOscillator(),g=audio.createGain(),lp=audio.createBiquadFilter();o.type=i===0?"sine":"triangle";o.frequency.value=f;lp.type="lowpass";lp.frequency.value=150+i*30;g.gain.value=[.10,.035,.014][i];o.connect(lp);lp.connect(g);g.connect(bus);o.start();lowOsc.push({o:o,g:g,filter:lp})});
+ updateAmbience(Math.floor(st.x/ROOM));
+ }catch(e){subtitle("СИСТЕМА","Звуковой движок недоступен в этом браузере.",3500)}
+}
+function updateAmbience(z){
+ if(!audio||!st.sound)return;
+ var t=audio.currentTime;
+ if(noiseGain){var v=[.065,.035,.025,.08,.015][z]||.03;noiseGain.gain.cancelScheduledValues(t);noiseGain.gain.setTargetAtTime(v,t,.8)}
+ lowOsc.forEach(function(a,i){var f=[41.2,55,82.4][i];var mod=[[0,0,0],[1.01,.5,0],[.98,1.02,.33],[.73,.5,1.02],[.5,.99,1.5]][z]||[1,1,1];a.o.frequency.setTargetAtTime(f*mod[i],t,2.5);a.g.gain.setTargetAtTime([.10,.035,.014][i]*(z===4?.3:1),t,1.4)});
+ if(musicTimer)clearInterval(musicTimer);
+ var phrases=[[110,164.81,146.83],[98,146.83,123.47],[82.41,110,164.81],[73.42,110,146.83],[55,82.41,110]][z]||[110,146.83];
+ var count=0;musicTimer=setInterval(function(){if(!audio||!st.sound)return;if(Math.random()>.49)return;var f=phrases[count++%phrases.length],o=audio.createOscillator(),g=audio.createGain(),lp=audio.createBiquadFilter(),pan=audio.createStereoPanner(),at=audio.currentTime;o.type=count%3===0?"sine":"triangle";o.frequency.value=f;lp.type="lowpass";lp.frequency.value=390;pan.pan.value=(Math.random()-.5)*.8;g.gain.setValueAtTime(.0001,at);g.gain.exponentialRampToValueAtTime(.024,at+1.3);g.gain.exponentialRampToValueAtTime(.0001,at+7+Math.random()*4);o.connect(lp);lp.connect(g);g.connect(pan);pan.connect(bus);o.start(at);o.stop(at+12)},9000);
+}
+function audioStop(){if(musicTimer)clearInterval(musicTimer);musicTimer=null;if(audio){audio.close().catch(function(){});audio=null;bus=null;noise=null;noiseGain=null;lowOsc=[]}}
+function toggleAudio(){st.sound=!st.sound;$("soundBtn").textContent="ЗВУК: "+(st.sound?"ВКЛ":"ВЫКЛ");if(st.sound)audioStart();else audioStop();save()}
+function pause(){if(!st.started)return;showModal("НОЧНАЯ СМЕНА","ПАУЗА","Здание подождёт. Настрой громкость или вернись к работе.",null,[{text:"ПРОДОЛЖИТЬ",primary:true,run:hideModal},{text:"НАЧАТЬ ЗАНОВО",run:function(){showModal("АРХИВ","УДАЛИТЬ ЗАПИСЬ?","Весь текущий прогресс будет удалён.",null,[{text:"ОСТАТЬСЯ",run:function(){hideModal()}},{text:"УДАЛИТЬ И НАЧАТЬ СНАЧАЛА",run:function(){localStorage.removeItem("lastSignalArchiveSave");st=defaults();hideModal();$("start").classList.add("show");save()}}])}}]);var row=document.createElement("label");row.className="rangeRow";row.innerHTML='<span>ГРОМКОСТЬ</span><input type="range" min="0" max="1" step=".01" value="'+st.volume+'"><span>'+Math.round(st.volume*100)+'%</span>';var input=row.querySelector("input");input.oninput=function(){st.volume=+input.value;if(bus)bus.gain.setTargetAtTime(st.volume,audio.currentTime,.05);row.lastElementChild.textContent=Math.round(st.volume*100)+"%";save()};$("mText").appendChild(row)}
+$("begin").onclick=function(){$("start").classList.remove("show");st.started=true;save();if(st.sound)audioStart();chapter(Math.floor(st.x/ROOM));subtitle("АРХИВАРИУС","На карточке твой почерк. Ты не помнишь этой смены.",5000);requestAnimationFrame(render)};
+$("soundBtn").onclick=toggleAudio;
+$("fullBtn").onclick=async function(){try{if(!document.fullscreenElement)await app.requestFullscreen();else await document.exitFullscreen()}catch(e){toast("Браузер не разрешил полный экран")}};
+document.addEventListener("fullscreenchange",function(){$("fullBtn").textContent=document.fullscreenElement?"↙":"⛶"});
+window.addEventListener("keydown",function(e){var k=e.key;if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(k)>=0)e.preventDefault();if(k==="Escape"){if($("modal").classList.contains("show"))hideModal();else pause();return}if((k==="e"||k==="E"||k===" ")&&!$("modal").classList.contains("show")){interact();return}keys[k]=true});
+window.addEventListener("keyup",function(e){keys[e.key]=false});
+window.addEventListener("blur",function(){keys={}});
+$("game").addEventListener("pointerdown",function(e){if(!st.started||!$("modal").classList.contains("show"))return;var rect=canvas.getBoundingClientRect(),cx=(e.clientX-rect.left)/rect.width*W,wx=cx+camera;var a=rooms[Math.floor(st.x/ROOM)],best=null,bd=50;a.forEach(function(o){var d=Math.hypot(o.x-wx,o.y-st.y);if(d<bd){best=o;bd=d}});if(best){st.x=best.x;st.y=best.y;nearest();interact(best)}});
+document.querySelectorAll("#touch button").forEach(function(b){var k=b.dataset.key;b.onpointerdown=function(e){e.preventDefault();if(k==="e")interact();else keys[k]=true};["pointerup","pointercancel","pointerleave"].forEach(function(v){b.addEventListener(v,function(){keys[k]=false})})});
+var restored=load();if(restored){st=restored;if(st.started){$("start").classList.remove("show");$("soundBtn").textContent="ЗВУК: "+(st.sound?"ВКЛ":"ВЫКЛ");if(st.finished){subtitle("АРХИВАРИУС","Ночная смена окончена. Нажми Esc, чтобы начать заново.",5000)}requestAnimationFrame(render)}}
+requestAnimationFrame(render);
 })();
-</script></body></html>
+</script>
+</body>
+</html>
