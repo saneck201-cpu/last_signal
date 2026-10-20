@@ -274,9 +274,9 @@ function render(now){
  if(z!==lastRoom){lastRoom=z;chapter(z);updateAmbience(z)}
  if(st.started&&!st.finished&&!$("modal").classList.contains("show")){
  var dx=0,dy=0;if(keys.ArrowLeft||keys.a||keys.A)dx--;if(keys.ArrowRight||keys.d||keys.D)dx++;if(keys.ArrowUp||keys.w||keys.W)dy--;if(keys.ArrowDown||keys.s||keys.S)dy++;
- if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075;st.x+=dx/norm*speed;st.y+=dy/norm*speed;st.dir=dx>0?1:dx<0?-1:st.dir;st.x=Math.max(22,Math.min(WORLD-22,st.x));st.y=Math.max(63,Math.min(184,st.y));
+ if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075,nx=Math.max(22,Math.min(WORLD-22,st.x+dx/norm*speed)),ny=Math.max(63,Math.min(184,st.y+dy/norm*speed)),roomNow=Math.floor(st.x/ROOM);function blocked(cx,cy){return rooms[roomNow].some(function(o){return Math.hypot(cx-o.x,(cy-o.y)*.82)<17})}if(!blocked(nx,st.y))st.x=nx;if(!blocked(st.x,ny))st.y=ny;st.dir=dx>0?1:dx<0?-1:st.dir;
  if(Math.abs(st.x-(render.lastStepX||0))>22){render.lastStepX=st.x;stepSide++;playSound(z===3?"stepPipe":"step");}
- var nz=Math.floor(st.x/ROOM);if(nz>z){var gate=finishChapterGate(z);if(gate){st.x=(z+1)*ROOM-35;subtitle("АРХИВАРИУС",gate,4500);playSound("wrong")}}
+ var nz=Math.floor(st.x/ROOM);if(nz>z){var gate=finishChapterGate(z);if(gate){st.x=(z+1)*ROOM-35;var warning="gateWarn"+z;if(!st.flags[warning]){subtitle("АРХИВАРИУС",gate,4500);playSound("wrong");st.flags[warning]=true;save()}}}
  }
  }
  camera=Math.max(0,Math.min(WORLD-W,st.x-W*.48));
