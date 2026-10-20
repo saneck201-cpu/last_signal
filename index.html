@@ -258,7 +258,7 @@ function drawRoom(z,cam){
  ctx.fillStyle="#080b0b";ctx.fillRect(base+7,7,ROOM-14,12);ctx.fillRect(base+7,H-19,ROOM-14,12);
  ctx.fillStyle="#65645a";ctx.fillRect(base+10,18,ROOM-20,3);ctx.fillRect(base+10,H-21,ROOM-20,3);
  ctx.fillStyle="#080b0b";ctx.fillRect(base+7,18,12,52);ctx.fillRect(base+7,184,12,14);ctx.fillRect(base+ROOM-19,18,12,52);ctx.fillRect(base+ROOM-19,184,12,14);
- ctx.fillStyle="#111615";ctx.fillRect(base+5,70,17,114);ctx.fillRect(base+ROOM-22,70,17,114);
+ ctx.fillStyle="#111615";ctx.fillRect(base+5,70,17,57);ctx.fillRect(base+5,179,17,19);ctx.fillRect(base+ROOM-22,70,17,57);ctx.fillRect(base+ROOM-22,179,17,19);
  ctx.fillStyle="#9a5149";ctx.fillRect(base+ROOM-12,130,3,8);ctx.fillRect(base+9,130,3,8);
  rooms[z].forEach(function(o){var sx=o.x-cam;if(sx>-48&&sx<ROOM+48)drawTopObject(o,sx,o.y)});
  if(st.flags.lineRestored&&z===1&&!st.flags.silhouetteGone){var sil=base+433;ctx.fillStyle="#101414";ctx.fillRect(sil,108,8,19);ctx.fillRect(sil+1,102,6,7);ctx.fillStyle="#9a514966";ctx.fillRect(sil+2,104,2,2)}
