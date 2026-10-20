@@ -55,7 +55,7 @@ var rooms=[
  [{id:"pipes",x:ROOM*3+100,y:82,label:"Трубы отопления",type:"pipes"},{id:"boiler",x:ROOM*3+244,y:138,label:"Котёл",type:"boiler"},{id:"mirror",x:ROOM*3+366,y:95,label:"Зеркало лифта",type:"mirror"},{id:"exit3",x:ROOM*3+448,y:128,label:"Лестничная дверь",type:"door"}],
  [{id:"cabinet",x:ROOM*4+92,y:126,label:"Картотечный шкаф",type:"cabinet"},{id:"typewriter",x:ROOM*4+236,y:140,label:"Машинка",type:"typewriter"},{id:"window2",x:ROOM*4+357,y:77,label:"Окно на улицу",type:"window"},{id:"send",x:ROOM*4+451,y:127,label:"Почтовый лоток",type:"send"}]
 ];
-var st={v:2,started:false,x:76,y:165,faceY:1,flags:{},facts:[],seen:[],sound:false,volume:.55,finished:false,ending:null};
+var st={v:2,started:false,x:76,y:165,faceX:0,faceY:-1,flags:{},facts:[],seen:[],sound:false,volume:.55,finished:false,ending:null};
 var keys={},lastStep=0,stepSide=0,near=null,camera=0,elapsed=0,lastRoom=-1,subtitleTimer=0,chapterTimer=0,toastTimer=0,endingCount=0;
 var audio=null,bus=null,ambience=[],musicTimer=null,lowOsc=[],noise=null,noiseGain=null;
 var palette=[{wall:"#24292b",floor:"#171b1d",lit:"#5e6060",red:"#884a4a"},{wall:"#292729",floor:"#18191b",lit:"#625957",red:"#98544d"},{wall:"#20272a",floor:"#151b1e",lit:"#526469",red:"#8e504b"},{wall:"#2a2927",floor:"#191a19",lit:"#6a6256",red:"#9a5648"},{wall:"#252729",floor:"#17191b",lit:"#696258",red:"#a15248"}];
@@ -250,8 +250,8 @@ function drawRoom(z,cam){
  if(z===4){ctx.fillStyle="#323838";ctx.fillRect(base+0,45,ROOM,95);for(var r=0;r<5;r++){ctx.fillStyle="#141a1a";ctx.fillRect(base+18+r*95,53,62,76);ctx.fillStyle="#69665b";ctx.fillRect(base+22+r*95,59,54,2);ctx.fillStyle="#827866";for(var l=0;l<5;l++)ctx.fillRect(base+26+r*95,67+l*10,31+(l%2)*9,1)}}
  // floor
  ctx.fillStyle=p.floor;ctx.fillRect(base,112,ROOM,H-112);ctx.fillStyle="#b9ad9410";ctx.fillRect(base,113,ROOM,2);
- for(var fy=120;fy<H;fy+=13){var inset=Math.max(0,(fy-120)*.12);ctx.fillStyle="#ffffff08";ctx.fillRect(base+inset,fy,ROOM-inset*2,1);ctx.fillStyle="#05070724";ctx.fillRect(base+inset,fy+1,ROOM-inset*2,1)}
- for(var xx=base+14;xx<base+ROOM;xx+=39){ctx.strokeStyle="#d4cbb00b";ctx.beginPath();ctx.moveTo(base+ROOM/2+(xx-(base+ROOM/2))*.25,112);ctx.lineTo(xx,H);ctx.stroke()}
+ for(var fy=120;fy<H;fy+=13){var inset=Math.max(0,(fy-120)*.04);ctx.fillStyle="#ffffff08";ctx.fillRect(base+inset,fy,ROOM-inset*2,1);ctx.fillStyle="#05070724";ctx.fillRect(base+inset,fy+1,ROOM-inset*2,1)}
+ for(var xx=base+14;xx<base+ROOM;xx+=39){ctx.strokeStyle="#d4cbb00b";ctx.beginPath();ctx.moveTo(base+ROOM/2+(xx-(base+ROOM/2))*.82,112);ctx.lineTo(xx,H);ctx.stroke()}
  ctx.fillStyle="#090c0c";ctx.fillRect(base,208,ROOM,8);ctx.fillStyle="#494b45";ctx.fillRect(base,205,ROOM,2);
  // door frames at room transitions; unbroken corridor continues through openings
  ctx.fillStyle="#0c1010";ctx.fillRect(base+ROOM-23,105,24,69);ctx.fillStyle="#6b6a61";ctx.fillRect(base+ROOM-25,102,3,73);ctx.fillRect(base+ROOM-2,102,3,73);ctx.fillStyle="#9a5149";ctx.fillRect(base+ROOM-8,137,2,3);
@@ -261,18 +261,27 @@ function drawRoom(z,cam){
  if(st.flags.lineRestored&&z===1&&!st.flags.silhouetteGone){var sil=base+433;ctx.fillStyle="#101414";ctx.fillRect(sil,108,8,26);ctx.fillRect(sil+1,99,6,9);ctx.fillStyle="#9a514966";ctx.fillRect(sil+2,103,2,2)}
 }
 function drawPlayer(){
- var sx=Math.round(st.x-camera),sy=Math.round(st.y),moving=!!(keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||keys.a||keys.A||keys.d||keys.D||keys.w||keys.W||keys.s||keys.S),walk=moving?Math.sin(elapsed*.025)*2:Math.sin(elapsed*.003)*.45;
- ctx.fillStyle="#02040488";ctx.beginPath();ctx.ellipse(sx,sy+3,11,4,0,0,Math.PI*2);ctx.fill();
- ctx.fillStyle="#101615";ctx.fillRect(sx-6,sy-1+Math.max(0,walk),5,7);ctx.fillRect(sx+2,sy-1+Math.max(0,-walk),5,7);
- ctx.fillStyle="#51483e";ctx.fillRect(sx-7,sy+4+Math.max(0,walk),6,3);ctx.fillRect(sx+2,sy+4+Math.max(0,-walk),6,3);
- ctx.fillStyle="#101615";ctx.fillRect(sx-9,sy-17,18,19);ctx.fillStyle="#303a38";ctx.fillRect(sx-7,sy-18,14,18);ctx.fillRect(sx-10,sy-14,4,11);ctx.fillRect(sx+6,sy-14,4,11);
- ctx.fillStyle="#46504a";ctx.fillRect(sx-6,sy-16,12,2);ctx.fillRect(sx-7,sy-1,5,3);ctx.fillRect(sx+2,sy-1,5,3);
- ctx.fillStyle="#171e1d";ctx.fillRect(sx-1,sy-14,2,12);ctx.fillStyle="#171916";ctx.fillRect(sx-6,sy-16,2,10);ctx.fillRect(sx+4,sy-16,2,10);
- ctx.fillStyle="#776c58";ctx.fillRect(sx-5,sy-14,10,8);ctx.fillStyle="#343a35";ctx.fillRect(sx-4,sy-13,8,6);ctx.fillStyle="#9b5148";ctx.fillRect(sx-2,sy-12,4,3);ctx.fillStyle="#d1b98a";ctx.fillRect(sx+1,sy-11,1,1);
- ctx.fillStyle="#202927";ctx.fillRect(sx-10,sy-13+walk,3,8);ctx.fillRect(sx+7,sy-13-walk,3,8);ctx.fillStyle="#9b8e76";ctx.fillRect(sx-9,sy-5+walk,2,2);ctx.fillRect(sx+7,sy-5-walk,2,2);
- ctx.fillStyle="#0c1110";ctx.fillRect(sx-7,sy-29,14,13);ctx.fillRect(sx-9,sy-25,18,7);ctx.fillStyle="#6f7165";ctx.fillRect(sx-5,sy-28,10,10);ctx.fillStyle="#a99478";ctx.fillRect(sx-4,sy-27,8,8);
- ctx.fillStyle="#333a35";ctx.fillRect(sx-7,sy-30,14,5);ctx.fillRect(sx-8,sy-27,3,7);ctx.fillRect(sx+5,sy-27,3,7);ctx.fillStyle="#211f1b";ctx.fillRect(sx-5,sy-25,10,4);ctx.fillRect(sx-4,sy-21,8,2);ctx.fillStyle="#655643";ctx.fillRect(sx-5,sy-19,2,2);ctx.fillRect(sx+3,sy-19,2,2);
- ctx.fillStyle="#c3b99d22";ctx.fillRect(sx-8,sy-29,1,9);ctx.fillRect(sx+7,sy-27,1,8);
+ var sx=Math.round(st.x-camera),sy=Math.round(st.y),moving=!!(keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||keys.a||keys.A||keys.d||keys.D||keys.w||keys.W||keys.s||keys.S),walk=moving?Math.sin(elapsed*.026)*1.2:Math.sin(elapsed*.003)*.25;
+ var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY,angle=Math.abs(fx)>Math.abs(fy)?(fx>0?Math.PI/2:-Math.PI/2):(fy>0?Math.PI:0);
+ // Маленький нескладный путник: большая голова, короткое пальтишко и тонкие смешные ноги.
+ ctx.fillStyle="#02040488";ctx.beginPath();ctx.ellipse(sx,sy+2,7,2.5,0,0,Math.PI*2);ctx.fill();
+ ctx.save();ctx.translate(sx,sy);ctx.rotate(angle);ctx.scale(.68,.68);
+ // тонкие ноги, которые чуть путаются при ходьбе
+ ctx.fillStyle="#171a18";ctx.fillRect(-3,-1+Math.max(0,walk),2,7);ctx.fillRect(2,-1+Math.max(0,-walk),2,7);
+ ctx.fillStyle="#625849";ctx.fillRect(-4,5+Math.max(0,walk),3,2);ctx.fillRect(2,5+Math.max(0,-walk),3,2);
+ // короткое пальтишко
+ ctx.fillStyle="#111615";ctx.fillRect(-5,-13,10,13);ctx.fillStyle="#35413c";ctx.fillRect(-4,-13,8,11);ctx.fillStyle="#252d29";ctx.fillRect(-5,-5,10,4);ctx.fillStyle="#7d705b";ctx.fillRect(-1,-11,2,6);
+ // ручки-ниточки и крошечные ладони
+ ctx.fillStyle="#26302c";ctx.fillRect(-6,-11,1,7);ctx.fillRect(5,-11,1,7);ctx.fillStyle="#b19a79";ctx.fillRect(-7,-4,2,2);ctx.fillRect(5,-4,2,2);
+ // малюсенький рюкзак и одинокий красный огонёк
+ ctx.fillStyle="#1a211e";ctx.fillRect(-3,-12,6,6);ctx.fillStyle="#a34f4d";ctx.fillRect(-1,-10,2,2);
+ // большая нелепая голова в капюшоне; при взгляде вниз появляются глаза
+ ctx.fillStyle="#101513";ctx.fillRect(-6,-22,12,11);ctx.fillRect(-7,-19,14,6);
+ ctx.fillStyle="#41473e";ctx.fillRect(-5,-22,10,9);ctx.fillStyle="#b9a486";ctx.fillRect(-4,-21,8,8);
+ ctx.fillStyle="#332d25";ctx.fillRect(-5,-23,10,3);ctx.fillRect(-6,-21,2,5);ctx.fillRect(4,-21,2,5);
+ if(fy>0&&Math.abs(fy)>=Math.abs(fx)){ctx.fillStyle="#302820";ctx.fillRect(-3,-18,1,1);ctx.fillRect(2,-18,1,1);ctx.fillStyle="#806b55";ctx.fillRect(-1,-16,2,1)}
+ else{ctx.fillStyle="#75644d";ctx.fillRect(-3,-14,2,2);ctx.fillRect(2,-14,2,2)}
+ ctx.restore();
 }
 var particles=[];for(var pi=0;pi<80;pi++)particles.push({x:Math.random()*W,y:Math.random()*H,v:(.08+Math.random()*.28),s:Math.random()<.8?1:2});
 function render(now){
@@ -283,7 +292,7 @@ function render(now){
  var dx=0,dy=0;if(keys.ArrowLeft||keys.a||keys.A)dx--;if(keys.ArrowRight||keys.d||keys.D)dx++;if(keys.ArrowUp||keys.w||keys.W)dy--;if(keys.ArrowDown||keys.s||keys.S)dy++;
  if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075,roomNow=Math.floor(st.x/ROOM),nx=Math.max(14,Math.min(WORLD-14,st.x+dx/norm*speed)),ny=Math.max(106,Math.min(193,st.y+dy/norm*speed));
  function blocked(cx,cy){var rz=Math.max(0,Math.min(COUNT-1,Math.floor(cx/ROOM))),localX=cx-rz*ROOM;if(cy<106||cy>193)return true;if(localX<18||localX>ROOM-18){if(cy<145||cy>178)return true}return rooms[rz].some(function(o){if(o.y<118)return false;var w=(o.type==="desk"||o.type==="cabinet"||o.type==="typewriter"||o.type==="boiler"||o.type==="board")?25:17;return Math.abs(cx-o.x)<w&&Math.abs(cy-(o.y+3))<13})}
- var tx=nx,ty=st.y;if(blocked(tx,ty))tx=st.x;if(blocked(st.x,ny))ny=st.y;if(!blocked(tx,ny)){st.x=tx;st.y=ny}else{if(!blocked(tx,st.y))st.x=tx;if(!blocked(st.x,ny))st.y=ny}st.dir=dx>0?1:dx<0?-1:st.dir;st.faceY=dy<0?-1:dy>0?1:(st.faceY||1);
+ var tx=nx,ty=st.y;if(blocked(tx,ty))tx=st.x;if(blocked(st.x,ny))ny=st.y;if(!blocked(tx,ny)){st.x=tx;st.y=ny}else{if(!blocked(tx,st.y))st.x=tx;if(!blocked(st.x,ny))st.y=ny}st.dir=dx>0?1:dx<0?-1:st.dir;st.faceX=dx||st.faceX||0;st.faceY=dy||st.faceY||-1;
  if(Math.abs(st.x-(render.lastStepX||0))>22){render.lastStepX=st.x;stepSide++;playSound(z===3?"stepPipe":"step");}
  var nz=Math.floor(st.x/ROOM);if(nz>z){var gate=finishChapterGate(z);if(gate){st.x=(z+1)*ROOM-35;var warning="gateWarn"+z;if(!st.flags[warning]){subtitle("АРХИВАРИУС",gate,4500);playSound("wrong");st.flags[warning]=true;save()}}}
  }
