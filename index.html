@@ -46,7 +46,7 @@
 "use strict";
 var canvas=document.getElementById("game"),ctx=canvas.getContext("2d"),W=384,H=216,app=document.getElementById("app"),$=function(x){return document.getElementById(x)};
 ctx.imageSmoothingEnabled=false;
-var ROOM=520,COUNT=5,WORLD=ROOM*COUNT;
+var ROOM=520,COUNT=5,WORLD=ROOM*COUNT,ROOM_SCALE=W/ROOM;
 var names=["АРХИВ","ПЛОЩАДКА 17","ЛИНИЯ 0","КОТЕЛЬНАЯ","РЕЕСТРОВАЯ"];
 var rooms=[
  [{id:"desk",x:115,y:137,label:"Карточка на столе",type:"desk"},{id:"window",x:245,y:88,label:"Окно во двор",type:"window"},{id:"clock",x:365,y:92,label:"Настенные часы",type:"clock"},{id:"phone",x:425,y:143,label:"Телефон",type:"phone"}],
@@ -237,50 +237,71 @@ function art(o,sx,z){
  }
 }
 function drawRoom(z,cam){
- var base=z*ROOM-cam, p=palette[z],t=elapsed;
- // layered distant view
- ctx.fillStyle=p.wall;ctx.fillRect(base,0,ROOM,H);
- ctx.fillStyle="#0e1213";ctx.fillRect(base,0,ROOM,35);
- ctx.fillStyle="#353938";ctx.fillRect(base+12,37,ROOM-24,5);
- // wall fixtures and texture
- if(z===0){for(var i=0;i<6;i++){var fx=base+22+i*86;ctx.fillStyle="#3c4240";ctx.fillRect(fx,48,62,70);ctx.fillStyle="#181d1d";ctx.fillRect(fx+5,53,52,58);ctx.fillStyle="#8a7d66";ctx.globalAlpha=.17+Math.sin(t*.002+i)*.04;ctx.fillRect(fx+12,65,34,33);ctx.globalAlpha=1;ctx.fillStyle="#4f514a";for(var a=0;a<6;a++)ctx.fillRect(fx+10,120+a*7,42,2)}}
- if(z===1){for(var j=0;j<4;j++){var dx=base+36+j*120;ctx.fillStyle="#484744";ctx.fillRect(dx,48,75,94);ctx.fillStyle="#191d1c";ctx.fillRect(dx+7,55,60,80);ctx.fillStyle="#777063";ctx.fillRect(dx+10,62,54,2);ctx.fillStyle="#a54f48";ctx.fillRect(dx+55,98,3,3)}ctx.fillStyle="#292e2c";ctx.fillRect(base+3,60,28,66);ctx.fillRect(base+3,130,80,7)}
- if(z===2){ctx.fillStyle="#424746";ctx.fillRect(base+10,44,ROOM-20,17);for(var n=0;n<8;n++){ctx.fillStyle="#161c1d";ctx.fillRect(base+25+n*61,65,48,57);ctx.fillStyle="#626966";ctx.fillRect(base+28+n*61,68,42,2);ctx.fillStyle="#a14f49";ctx.globalAlpha=.5+Math.sin(t*.002+n)*.3;ctx.fillRect(base+32+n*61,80,2,2);ctx.globalAlpha=1}ctx.fillStyle="#373e3d";ctx.fillRect(base+18,126,ROOM-36,26)}
- if(z===3){for(var h=0;h<5;h++){ctx.fillStyle="#58615a";ctx.fillRect(base+25+h*95,43,5,92);ctx.fillRect(base+25+h*95,76,72,5);ctx.fillStyle="#333a37";ctx.fillRect(base+28+h*95,49,2,22)}ctx.fillStyle="#414945";ctx.fillRect(base+5,145,ROOM-10,8);ctx.fillStyle="#777468";ctx.fillRect(base+0,36,ROOM,5)}
- if(z===4){ctx.fillStyle="#323838";ctx.fillRect(base+0,45,ROOM,95);for(var r=0;r<5;r++){ctx.fillStyle="#141a1a";ctx.fillRect(base+18+r*95,53,62,76);ctx.fillStyle="#69665b";ctx.fillRect(base+22+r*95,59,54,2);ctx.fillStyle="#827866";for(var l=0;l<5;l++)ctx.fillRect(base+26+r*95,67+l*10,31+(l%2)*9,1)}}
- // floor
- ctx.fillStyle=p.floor;ctx.fillRect(base,112,ROOM,H-112);ctx.fillStyle="#b9ad9410";ctx.fillRect(base,113,ROOM,2);
- for(var fy=120;fy<H;fy+=13){var inset=Math.max(0,(fy-120)*.04);ctx.fillStyle="#ffffff08";ctx.fillRect(base+inset,fy,ROOM-inset*2,1);ctx.fillStyle="#05070724";ctx.fillRect(base+inset,fy+1,ROOM-inset*2,1)}
- for(var xx=base+14;xx<base+ROOM;xx+=39){ctx.strokeStyle="#d4cbb00b";ctx.beginPath();ctx.moveTo(base+ROOM/2+(xx-(base+ROOM/2))*.82,112);ctx.lineTo(xx,H);ctx.stroke()}
- ctx.fillStyle="#090c0c";ctx.fillRect(base,208,ROOM,8);ctx.fillStyle="#494b45";ctx.fillRect(base,205,ROOM,2);
- // door frames at room transitions; unbroken corridor continues through openings
- ctx.fillStyle="#0c1010";ctx.fillRect(base+ROOM-23,105,24,69);ctx.fillStyle="#6b6a61";ctx.fillRect(base+ROOM-25,102,3,73);ctx.fillRect(base+ROOM-2,102,3,73);ctx.fillStyle="#9a5149";ctx.fillRect(base+ROOM-8,137,2,3);
- // zone objects
- rooms[z].forEach(function(o){var sx=o.x-cam;if(sx>-55&&sx<440)art(o,sx,z)});
- // distant moving silhouette subtly appears after first exchange, vanishes if faced
- if(st.flags.lineRestored&&z===1&&!st.flags.silhouetteGone){var sil=base+433;ctx.fillStyle="#101414";ctx.fillRect(sil,108,8,26);ctx.fillRect(sil+1,99,6,9);ctx.fillStyle="#9a514966";ctx.fillRect(sil+2,103,2,2)}
+ var base=z*ROOM-cam,p=palette[z],t=elapsed;
+ // Вся планировка комнаты видна сразу сверху; стены занимают только её края.
+ ctx.fillStyle="#090c0c";ctx.fillRect(base,0,ROOM,H);
+ ctx.fillStyle=p.wall;ctx.fillRect(base+8,8,ROOM-16,H-16);
+ ctx.fillStyle="#0e1212";ctx.fillRect(base+18,18,ROOM-36,H-36);
+ ctx.fillStyle=p.floor;ctx.fillRect(base+22,22,ROOM-44,H-44);
+ // ровная плитка без перспективного «коридорного» схода
+ for(var gx=base+22;gx<base+ROOM-22;gx+=32){ctx.fillStyle="#d4cbb00a";ctx.fillRect(gx,22,1,H-44)}
+ for(var gy=22;gy<H-22;gy+=24){ctx.fillStyle="#03050535";ctx.fillRect(base+22,gy,ROOM-44,1);ctx.fillStyle="#d4cbb008";ctx.fillRect(base+22,gy+1,ROOM-44,1)}
+ // пятна света и старые потёртости пола
+ for(var stain=0;stain<7;stain++){var px=base+54+((stain*83+z*31)%(ROOM-108)),py=57+((stain*37+z*19)%118);ctx.fillStyle=stain%2?"#b8aa8710":"#02050520";ctx.fillRect(px,py,17+(stain%3)*6,2)}
+ // уникальные детали каждой комнаты, нарисованные как предметы на плане
+ if(z===0){ctx.fillStyle="#393e39";for(var i=0;i<5;i++){ctx.fillRect(base+42+i*88,27,68,29);ctx.fillStyle="#171d1b";ctx.fillRect(base+46+i*88,31,60,21);ctx.fillStyle="#393e39"}ctx.fillStyle="#81755e";ctx.fillRect(base+37,65,ROOM-74,2)}
+ if(z===1){for(var j=0;j<4;j++){var dx=base+55+j*112;ctx.fillStyle="#625b50";ctx.fillRect(dx,25,63,8);ctx.fillStyle="#252725";ctx.fillRect(dx+3,28,57,3);ctx.fillStyle="#a54f48";ctx.fillRect(dx+52,31,3,2)}ctx.fillStyle="#4f4941";ctx.fillRect(base+30,190,ROOM-60,3)}
+ if(z===2){ctx.fillStyle="#4b514c";ctx.fillRect(base+34,26,ROOM-68,5);ctx.strokeStyle="#857862";for(var n=0;n<7;n++){ctx.beginPath();ctx.moveTo(base+53+n*61,31);ctx.lineTo(base+53+n*61,65+(n%3)*13);ctx.stroke()}ctx.fillStyle="#a14f49";ctx.globalAlpha=.5+Math.sin(t*.002)*.25;ctx.fillRect(base+236,48,5,5);ctx.globalAlpha=1}
+ if(z===3){ctx.strokeStyle="#59635b";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(base+35,43);ctx.lineTo(base+35,74);ctx.lineTo(base+470,74);ctx.lineTo(base+470,168);ctx.stroke();ctx.lineWidth=1;ctx.fillStyle="#383d38";for(var h=0;h<8;h++)ctx.fillRect(base+70+h*53,70,4,9)}
+ if(z===4){ctx.fillStyle="#323838";for(var r=0;r<5;r++){ctx.fillRect(base+29+r*94,24,69,35);ctx.fillStyle="#141a1a";ctx.fillRect(base+33+r*94,28,61,27);ctx.fillStyle="#827866";for(var l=0;l<3;l++)ctx.fillRect(base+38+r*94,33+l*7,44+(l%2)*8,1);ctx.fillStyle="#323838"}}
+ // толстые стены и две боковые двери в соседние секции
+ ctx.fillStyle="#080b0b";ctx.fillRect(base+7,7,ROOM-14,12);ctx.fillRect(base+7,H-19,ROOM-14,12);
+ ctx.fillStyle="#65645a";ctx.fillRect(base+10,18,ROOM-20,3);ctx.fillRect(base+10,H-21,ROOM-20,3);
+ ctx.fillStyle="#080b0b";ctx.fillRect(base+7,18,12,52);ctx.fillRect(base+7,184,12,14);ctx.fillRect(base+ROOM-19,18,12,52);ctx.fillRect(base+ROOM-19,184,12,14);
+ ctx.fillStyle="#111615";ctx.fillRect(base+5,70,17,114);ctx.fillRect(base+ROOM-22,70,17,114);
+ ctx.fillStyle="#9a5149";ctx.fillRect(base+ROOM-12,130,3,8);ctx.fillRect(base+9,130,3,8);
+ rooms[z].forEach(function(o){var sx=o.x-cam;if(sx>-48&&sx<ROOM+48)drawTopObject(o,sx,o.y)});
+ if(st.flags.lineRestored&&z===1&&!st.flags.silhouetteGone){var sil=base+433;ctx.fillStyle="#101414";ctx.fillRect(sil,108,8,19);ctx.fillRect(sil+1,102,6,7);ctx.fillStyle="#9a514966";ctx.fillRect(sil+2,104,2,2)}
+}
+function drawTopObject(o,x,y){
+ // Верхний ракурс: читаемые силуэты, небольшие тени и один пиксельный источник света.
+ ctx.fillStyle="#03050570";ctx.fillRect(x-17,y+9,34,4);
+ var stone="#454a43",edge="#161b19",paper="#b8ad92",red="#a34f4d";
+ switch(o.type){
+ case"desk":ctx.fillStyle=edge;ctx.fillRect(x-22,y-13,44,30);ctx.fillStyle="#594f42";ctx.fillRect(x-20,y-12,40,25);ctx.fillStyle="#77705e";ctx.fillRect(x-15,y-8,17,12);ctx.fillStyle=paper;ctx.fillRect(x-13,y-7,13,9);ctx.fillStyle="#554e43";ctx.fillRect(x+7,y-6,9,11);ctx.fillStyle=red;ctx.fillRect(x+11,y-4,2,2);break;
+ case"window":ctx.fillStyle="#111819";ctx.fillRect(x-22,y-8,44,18);ctx.fillStyle="#26383c";ctx.fillRect(x-19,y-6,38,13);ctx.fillStyle="#526265";ctx.fillRect(x-1,y-7,2,15);ctx.fillStyle=st.flags.observed?red:"#c7b993";ctx.fillRect(x+9,y-3,3,3);break;
+ case"clock":ctx.fillStyle="#171b19";ctx.fillRect(x-12,y-12,24,24);ctx.fillStyle="#aaa28e";ctx.fillRect(x-9,y-9,18,18);ctx.fillStyle="#242a27";ctx.fillRect(x-1,y-7,2,8);ctx.fillRect(x,y,6,2);break;
+ case"phone":ctx.fillStyle=edge;ctx.fillRect(x-16,y-11,32,22);ctx.fillStyle="#53574f";ctx.fillRect(x-14,y-9,28,18);ctx.fillStyle="#202623";ctx.fillRect(x-11,y-6,22,7);ctx.fillStyle="#a6987a";ctx.fillRect(x-9,y+3,18,3);break;
+ case"mail":ctx.fillStyle=paper;ctx.fillRect(x-14,y-10,28,20);ctx.fillStyle="#655d4e";ctx.beginPath();ctx.moveTo(x-13,y-8);ctx.lineTo(x,y+1);ctx.lineTo(x+13,y-8);ctx.stroke();ctx.fillStyle=red;ctx.fillRect(x+5,y-6,3,3);break;
+ case"door":ctx.fillStyle="#171b19";ctx.fillRect(x-19,y-24,38,48);ctx.fillStyle="#625343";ctx.fillRect(x-16,y-21,32,42);ctx.fillStyle="#8b765c";ctx.fillRect(x-13,y-17,26,34);ctx.fillStyle=red;ctx.fillRect(x+8,y+1,3,3);ctx.fillStyle="#c7b993";ctx.fillRect(x-17,y+20,34,2);break;
+ case"shoes":ctx.fillStyle="#57473b";ctx.fillRect(x-15,y-8,11,18);ctx.fillRect(x+4,y-11,11,18);ctx.fillStyle="#a39478";ctx.fillRect(x-13,y-5,7,6);ctx.fillRect(x+6,y-8,7,6);break;
+ case"lift":ctx.fillStyle="#121716";ctx.fillRect(x-20,y-22,40,44);ctx.fillStyle="#555b56";ctx.fillRect(x-17,y-19,34,38);ctx.fillStyle="#202523";ctx.fillRect(x-1,y-17,2,34);ctx.fillStyle=red;ctx.fillRect(x+9,y-5,3,3);break;
+ case"list":ctx.fillStyle="#151a18";ctx.fillRect(x-17,y-20,34,40);ctx.fillStyle=paper;ctx.fillRect(x-15,y-18,30,36);ctx.fillStyle="#625c50";for(var j=0;j<6;j++)ctx.fillRect(x-11,y-13+j*5,21-(j%2)*6,1);ctx.fillStyle=red;ctx.fillRect(x+8,y-14,2,2);break;
+ case"board":ctx.fillStyle=edge;ctx.fillRect(x-25,y-18,50,36);ctx.fillStyle="#505950";ctx.fillRect(x-22,y-15,44,30);ctx.fillStyle="#171d1c";ctx.fillRect(x-18,y-11,36,22);ctx.fillStyle="#a38a68";for(var k=0;k<4;k++){ctx.fillRect(x-15+k*9,y-7,4,4);ctx.fillRect(x-15+k*9,y+3,4,4)}ctx.strokeStyle="#a7987e";ctx.beginPath();ctx.moveTo(x-13,y);ctx.lineTo(x,y-4);ctx.lineTo(x+14,y+7);ctx.stroke();break;
+ case"tape":ctx.fillStyle="#151a18";ctx.fillRect(x-19,y-14,38,28);ctx.fillStyle="#535851";ctx.fillRect(x-16,y-11,32,22);ctx.fillStyle="#1c2220";ctx.fillRect(x-13,y-8,26,16);ctx.fillStyle="#a89d84";ctx.beginPath();ctx.arc(x-6,y,5,0,Math.PI*2);ctx.arc(x+6,y,5,0,Math.PI*2);ctx.fill();ctx.fillStyle="#303631";ctx.fillRect(x-2,y-2,4,4);break;
+ case"pipes":ctx.fillStyle="#66716a";ctx.fillRect(x-20,y-12,40,5);ctx.fillRect(x-16,y-17,5,34);ctx.fillRect(x+11,y-15,5,32);ctx.fillStyle="#2d3430";ctx.fillRect(x-20,y+7,40,5);break;
+ case"boiler":ctx.fillStyle="#151a18";ctx.beginPath();ctx.arc(x,y,23,0,Math.PI*2);ctx.fill();ctx.fillStyle="#596159";ctx.beginPath();ctx.arc(x,y,19,0,Math.PI*2);ctx.fill();ctx.fillStyle="#242a27";ctx.beginPath();ctx.arc(x,y,12,0,Math.PI*2);ctx.fill();ctx.fillStyle=red;ctx.fillRect(x+7,y-8,3,3);ctx.fillStyle="#a89f88";ctx.fillRect(x-1,y-16,2,8);break;
+ case"mirror":ctx.fillStyle="#151a18";ctx.fillRect(x-14,y-20,28,40);ctx.fillStyle="#627071";ctx.fillRect(x-11,y-17,22,34);ctx.fillStyle="#a5ada8";ctx.fillRect(x-8,y-14,2,14);break;
+ case"cabinet":ctx.fillStyle="#151a18";ctx.fillRect(x-22,y-19,44,38);ctx.fillStyle="#554e43";ctx.fillRect(x-19,y-16,38,32);ctx.fillStyle="#272c28";for(var d=0;d<4;d++){ctx.fillRect(x-17,y-13+d*7,34,5);ctx.fillStyle="#a99a7a";ctx.fillRect(x+11,y-11+d*7,2,2);ctx.fillStyle="#272c28"}break;
+ case"typewriter":ctx.fillStyle="#181d1a";ctx.fillRect(x-21,y-15,42,30);ctx.fillStyle="#656253";ctx.fillRect(x-18,y-12,36,24);ctx.fillStyle="#272c27";ctx.fillRect(x-15,y-9,30,11);ctx.fillStyle="#b6a98b";ctx.fillRect(x-13,y-11,26,3);for(var q=0;q<6;q++)ctx.fillRect(x-14+q*5,y+5,3,3);break;
+ case"send":ctx.fillStyle="#171c19";ctx.fillRect(x-22,y-19,44,38);ctx.fillStyle="#58564c";ctx.fillRect(x-19,y-16,38,32);ctx.fillStyle="#101513";ctx.fillRect(x-15,y-7,30,8);ctx.fillStyle=red;ctx.fillRect(x-5,y-5,10,2);break;
+ }
 }
 function drawPlayer(){
  var sx=Math.round(st.x-camera),sy=Math.round(st.y),moving=!!(keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||keys.a||keys.A||keys.d||keys.D||keys.w||keys.W||keys.s||keys.S),walk=moving?Math.sin(elapsed*.026)*1.2:Math.sin(elapsed*.003)*.25;
- var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY,angle=Math.abs(fx)>Math.abs(fy)?(fx>0?Math.PI/2:-Math.PI/2):(fy>0?Math.PI:0);
- // Маленький нескладный путник: большая голова, короткое пальтишко и тонкие смешные ноги.
- ctx.fillStyle="#02040488";ctx.beginPath();ctx.ellipse(sx,sy+2,7,2.5,0,0,Math.PI*2);ctx.fill();
- ctx.save();ctx.translate(sx,sy);ctx.rotate(angle);ctx.scale(.68,.68);
- // тонкие ноги, которые чуть путаются при ходьбе
+ var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY;
+ // Не вращаем всё тело: голова остаётся сверху, а взгляд и шаги меняются по четырём сторонам.
+ ctx.save();ctx.translate(sx,sy);ctx.scale(1/ROOM_SCALE,1);
+ ctx.fillStyle="#02040488";ctx.beginPath();ctx.ellipse(0,2,7,2.5,0,0,Math.PI*2);ctx.fill();
  ctx.fillStyle="#171a18";ctx.fillRect(-3,-1+Math.max(0,walk),2,7);ctx.fillRect(2,-1+Math.max(0,-walk),2,7);
  ctx.fillStyle="#625849";ctx.fillRect(-4,5+Math.max(0,walk),3,2);ctx.fillRect(2,5+Math.max(0,-walk),3,2);
- // короткое пальтишко
  ctx.fillStyle="#111615";ctx.fillRect(-5,-13,10,13);ctx.fillStyle="#35413c";ctx.fillRect(-4,-13,8,11);ctx.fillStyle="#252d29";ctx.fillRect(-5,-5,10,4);ctx.fillStyle="#7d705b";ctx.fillRect(-1,-11,2,6);
- // ручки-ниточки и крошечные ладони
- ctx.fillStyle="#26302c";ctx.fillRect(-6,-11,1,7);ctx.fillRect(5,-11,1,7);ctx.fillStyle="#b19a79";ctx.fillRect(-7,-4,2,2);ctx.fillRect(5,-4,2,2);
- // малюсенький рюкзак и одинокий красный огонёк
+ ctx.fillStyle="#26302c";ctx.fillRect(-6,-11+walk,1,7);ctx.fillRect(5,-11-walk,1,7);ctx.fillStyle="#b19a79";ctx.fillRect(-7,-4+walk,2,2);ctx.fillRect(5,-4-walk,2,2);
  ctx.fillStyle="#1a211e";ctx.fillRect(-3,-12,6,6);ctx.fillStyle="#a34f4d";ctx.fillRect(-1,-10,2,2);
- // большая нелепая голова в капюшоне; при взгляде вниз появляются глаза
- ctx.fillStyle="#101513";ctx.fillRect(-6,-22,12,11);ctx.fillRect(-7,-19,14,6);
- ctx.fillStyle="#41473e";ctx.fillRect(-5,-22,10,9);ctx.fillStyle="#b9a486";ctx.fillRect(-4,-21,8,8);
- ctx.fillStyle="#332d25";ctx.fillRect(-5,-23,10,3);ctx.fillRect(-6,-21,2,5);ctx.fillRect(4,-21,2,5);
- if(fy>0&&Math.abs(fy)>=Math.abs(fx)){ctx.fillStyle="#302820";ctx.fillRect(-3,-18,1,1);ctx.fillRect(2,-18,1,1);ctx.fillStyle="#806b55";ctx.fillRect(-1,-16,2,1)}
- else{ctx.fillStyle="#75644d";ctx.fillRect(-3,-14,2,2);ctx.fillRect(2,-14,2,2)}
+ ctx.fillStyle="#101513";ctx.fillRect(-6,-22,12,11);ctx.fillRect(-7,-19,14,6);ctx.fillStyle="#41473e";ctx.fillRect(-5,-22,10,9);ctx.fillStyle="#b9a486";ctx.fillRect(-4,-21,8,8);ctx.fillStyle="#332d25";ctx.fillRect(-5,-23,10,3);
+ ctx.fillStyle="#302820";
+ if(fy>0&&Math.abs(fy)>=Math.abs(fx)){ctx.fillRect(-3,-17,2,1);ctx.fillRect(2,-17,2,1)}
+ else if(fx<0){ctx.fillRect(-5,-18,1,2)}else if(fx>0){ctx.fillRect(4,-18,1,2)}else{ctx.fillStyle="#75644d";ctx.fillRect(-3,-14,2,2);ctx.fillRect(2,-14,2,2)}
  ctx.restore();
 }
 var particles=[];for(var pi=0;pi<80;pi++)particles.push({x:Math.random()*W,y:Math.random()*H,v:(.08+Math.random()*.28),s:Math.random()<.8?1:2});
@@ -290,22 +311,20 @@ function render(now){
  if(z!==lastRoom){lastRoom=z;chapter(z);updateAmbience(z)}
  if(st.started&&!st.finished&&!$("modal").classList.contains("show")){
  var dx=0,dy=0;if(keys.ArrowLeft||keys.a||keys.A)dx--;if(keys.ArrowRight||keys.d||keys.D)dx++;if(keys.ArrowUp||keys.w||keys.W)dy--;if(keys.ArrowDown||keys.s||keys.S)dy++;
- if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075,roomNow=Math.floor(st.x/ROOM),nx=Math.max(14,Math.min(WORLD-14,st.x+dx/norm*speed)),ny=Math.max(106,Math.min(193,st.y+dy/norm*speed));
- function blocked(cx,cy){var rz=Math.max(0,Math.min(COUNT-1,Math.floor(cx/ROOM))),localX=cx-rz*ROOM;if(cy<106||cy>193)return true;if(localX<18||localX>ROOM-18){if(cy<145||cy>178)return true}return rooms[rz].some(function(o){if(o.y<118)return false;var w=(o.type==="desk"||o.type==="cabinet"||o.type==="typewriter"||o.type==="boiler"||o.type==="board")?25:17;return Math.abs(cx-o.x)<w&&Math.abs(cy-(o.y+3))<13})}
+ if(dx||dy){var norm=Math.hypot(dx,dy),speed=dt*.075,roomNow=Math.floor(st.x/ROOM),nx=Math.max(12,Math.min(WORLD-12,st.x+dx/norm*speed)),ny=Math.max(25,Math.min(191,st.y+dy/norm*speed));
+ function blocked(cx,cy){var rz=Math.max(0,Math.min(COUNT-1,Math.floor(cx/ROOM))),localX=cx-rz*ROOM;if(cy<25||cy>191)return true;if(localX<22||localX>ROOM-22){if(cy<130||cy>179)return true}return rooms[rz].some(function(o){if(["desk","cabinet","typewriter","boiler","board","lift"].indexOf(o.type)<0)return false;var w=o.type==="desk"?24:21,h=o.type==="desk"?14:18;return Math.abs(cx-o.x)<w&&Math.abs(cy-o.y)<h})}
  var tx=nx,ty=st.y;if(blocked(tx,ty))tx=st.x;if(blocked(st.x,ny))ny=st.y;if(!blocked(tx,ny)){st.x=tx;st.y=ny}else{if(!blocked(tx,st.y))st.x=tx;if(!blocked(st.x,ny))st.y=ny}st.dir=dx>0?1:dx<0?-1:st.dir;st.faceX=dx||st.faceX||0;st.faceY=dy||st.faceY||-1;
  if(Math.abs(st.x-(render.lastStepX||0))>22){render.lastStepX=st.x;stepSide++;playSound(z===3?"stepPipe":"step");}
  var nz=Math.floor(st.x/ROOM);if(nz>z){var gate=finishChapterGate(z);if(gate){st.x=(z+1)*ROOM-35;var warning="gateWarn"+z;if(!st.flags[warning]){subtitle("АРХИВАРИУС",gate,4500);playSound("wrong");st.flags[warning]=true;save()}}}
  }
  }
- camera=Math.max(0,Math.min(WORLD-W,st.x-W*.48));
+ camera=Math.max(0,Math.min(WORLD-ROOM,Math.floor(st.x/ROOM)*ROOM));
  ctx.clearRect(0,0,W,H);
- // scene bands and parallax
- for(var r=Math.max(0,Math.floor(camera/ROOM));r<=Math.min(COUNT-1,Math.floor((camera+W)/ROOM));r++)drawRoom(r,camera);
- // rain/dust move differently per zone
+ // Одним кадром показываем весь план комнаты; горизонтально подгоняем его под экран.
+ ctx.save();ctx.setTransform(ROOM_SCALE,0,0,1,0,0);drawRoom(Math.floor(st.x/ROOM),camera);drawPlayer();ctx.restore();
+ // пыль и свет остаются в экранных координатах поверх всей комнаты
  for(var pp of particles){pp.y+=pp.v*(Math.floor(st.x/ROOM)===1?2.6:0.5);pp.x-=pp.v*.6;if(pp.y>H){pp.y=0;pp.x=Math.random()*W}if(pp.x<0)pp.x=W;ctx.fillStyle=pp.s===1?"#bcc0b522":"#b6a99a33";ctx.fillRect(pp.x,pp.y,pp.s,pp.s)}
- drawPlayer();
- // light cone and edge darkness
- var pz=Math.floor(st.x/ROOM);var sx=st.x-camera,light=ctx.createRadialGradient(sx,st.y-5,8,sx,st.y-5,165);light.addColorStop(0,"#d5c9a018");light.addColorStop(.36,"#d5c9a00b");light.addColorStop(1,"#030506aa");ctx.fillStyle=light;ctx.fillRect(0,0,W,H);
+ var pz=Math.floor(st.x/ROOM),sx=(st.x-camera)*ROOM_SCALE,screenY=st.y,light=ctx.createRadialGradient(sx,screenY-5,8,sx,screenY-5,165);light.addColorStop(0,"#d5c9a018");light.addColorStop(.36,"#d5c9a00b");light.addColorStop(1,"#030506aa");ctx.fillStyle=light;ctx.fillRect(0,0,W,H);
  // area darkening, flicker
  var flick=.02+Math.max(0,Math.sin(elapsed*.0043))*((pz===0||pz===2)?.045:.025);ctx.fillStyle="rgba(0,0,0,"+flick+")";ctx.fillRect(0,0,W,H);
  // soundless silhouette changes when player looks away from landing
@@ -357,7 +376,7 @@ document.addEventListener("fullscreenchange",function(){$("fullBtn").textContent
 window.addEventListener("keydown",function(e){var k=e.key;if(["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].indexOf(k)>=0)e.preventDefault();if(k==="Escape"){if($("modal").classList.contains("show"))hideModal();else pause();return}if((k==="e"||k==="E"||k===" ")&&!$("modal").classList.contains("show")){interactNearest();return}keys[k]=true});
 window.addEventListener("keyup",function(e){keys[e.key]=false});
 window.addEventListener("blur",function(){keys={}});
-$("game").addEventListener("pointerdown",function(e){if(!st.started||$("modal").classList.contains("show"))return;var rect=canvas.getBoundingClientRect(),cx=(e.clientX-rect.left)/rect.width*W,wx=cx+camera;var a=rooms[Math.floor(st.x/ROOM)],best=null,bd=50;a.forEach(function(o){var d=Math.hypot(o.x-wx,o.y-st.y);if(d<bd){best=o;bd=d}});if(best){interactObject(best)}});
+$("game").addEventListener("pointerdown",function(e){if(!st.started||$("modal").classList.contains("show"))return;var rect=canvas.getBoundingClientRect(),cx=(e.clientX-rect.left)/rect.width*W,wx=cx/ROOM_SCALE+camera;var a=rooms[Math.floor(st.x/ROOM)],best=null,bd=50;a.forEach(function(o){var d=Math.hypot(o.x-wx,o.y-st.y);if(d<bd){best=o;bd=d}});if(best){interactObject(best)}});
 document.querySelectorAll("#touch button").forEach(function(b){var k=b.dataset.key;b.onpointerdown=function(e){e.preventDefault();if(k==="e")interactNearest();else keys[k]=true};["pointerup","pointercancel","pointerleave"].forEach(function(v){b.addEventListener(v,function(){keys[k]=false})})});
 var restored=load();if(restored){st=restored;if(st.started){$("start").classList.remove("show");st.sound=false;$("soundBtn").textContent="ЗВУК: ВЫКЛ";if(st.finished){subtitle("АРХИВАРИУС","Ночная смена окончена. Нажми Esc, чтобы начать заново.",5000)}}}
 requestAnimationFrame(render);
