@@ -290,7 +290,7 @@ function drawTopObject(o,x,y){
 function drawPlayer(){
  var sx=Math.round(st.x-camera),sy=Math.round(st.y),moving=!!(keys.ArrowLeft||keys.ArrowRight||keys.ArrowUp||keys.ArrowDown||keys.a||keys.A||keys.d||keys.D||keys.w||keys.W||keys.s||keys.S);
  var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY,side=fx!==0,right=fx>0;
- var frame=moving?Math.floor(elapsed/155)%2:0,bob=moving?(frame?0:1):0;
+ var frame=moving?Math.floor(elapsed/210)%2:0;
  // компактный пиксельный силуэт: голова-маска, шапка, короткое пальто, тонкие конечности
  ctx.save();ctx.translate(sx,sy);ctx.scale(1/ROOM_SCALE,1);ctx.scale(.5,.5);
  ctx.fillStyle="#02040499";ctx.fillRect(-7,5,14,2);
