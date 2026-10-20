@@ -1,21 +1,27 @@
 # LAST SIGNAL — Последний сигнал
 
-A small Russian-language 8-bit mystery adventure made with vanilla HTML, CSS and JavaScript. No build step, no libraries required.
+Однопользовательская браузерная 8-bit история на русском языке. Илья просыпается на заброшенной полярной станции и пытается понять, кому принадлежит голос в повторяющемся радиосигнале. Исследуй пять локаций, находи записи и предметы, решай загадки и выбери, что отправить в будущее.
 
-## Run locally
-Open `index.html` in a modern browser. Click **НАЧАТЬ ИСТОРИЮ**. Audio starts only after you enable it, because browsers require user interaction.
+## Запуск
 
-## Publish on GitHub Pages
-1. Create a new GitHub repository.
-2. Upload `index.html` and `README.md` to the repository root.
-3. Open **Settings → Pages**.
-4. Under **Build and deployment**, choose **Deploy from a branch**, select `main` and `/ (root)`, then save.
-5. Wait for GitHub Pages to publish the site.
+Открой [игру](https://saneck201-cpu.github.io/last_signal/) или запусти `index.html` в современном браузере. Сборка и установка зависимостей не нужны. Для звука нажми кнопку «ЗВУК»: браузеры включают аудио только после действия игрока.
 
-## Controls
-- Move: WASD or arrow keys
-- Interact: E or Space
-- On touch screens: use the directional buttons
-- Click nearby objects to inspect them
+## Управление
 
-Progress is saved in the current browser's localStorage. The atmospheric soundtrack and sound effects are synthesized using Web Audio API; no external audio files are needed.
+- Движение: WASD или стрелки
+- Осмотреть предмет / действие: E или пробел
+- Войти в полноэкранный режим: «⛶ ЭКРАН» в верхней панели
+- Закрыть диалог / окно: Escape
+- На сенсорном экране: экранные стрелки
+
+Подойди к объекту: его имя появится на сцене. Также можно щёлкнуть по объекту, когда персонаж рядом.
+
+## Особенности
+
+- Пиксельная сцена с отдельными цветами и декором для каждой локации
+- Атмосферный синтезированный эмбиент, музыкальная тема, шаги и звуковой отклик на взаимодействия (Web Audio API)
+- Локальное автосохранение в браузере
+- Три варианта финала
+- Адаптивная раскладка и сенсорное управление
+
+Весь код и звук находятся в `index.html`; внешние аудиофайлы и игровые библиотеки не используются.
