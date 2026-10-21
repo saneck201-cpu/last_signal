@@ -249,23 +249,23 @@ function drawRoom(z,cam){
  // пятна света и старые потёртости пола
  for(var stain=0;stain<7;stain++){var px=base+54+((stain*83+z*31)%(ROOM-108)),py=57+((stain*37+z*19)%118);ctx.fillStyle=stain%2?"#b8aa8710":"#02050520";ctx.fillRect(px,py,17+(stain%3)*6,2)}
  // уникальные детали каждой комнаты, нарисованные как предметы на плане
- if(z===0){ctx.fillStyle="#393e39";for(var i=0;i<5;i++){ctx.fillRect(base+42+i*88,27,68,29);ctx.fillStyle="#171d1b";ctx.fillRect(base+46+i*88,31,60,21);ctx.fillStyle="#393e39"}ctx.fillStyle="#81755e";ctx.fillRect(base+37,65,ROOM-74,2)}
+ if(z===0){ctx.fillStyle="#393e39";for(var i=0;i<5;i++){ctx.fillRect(base+42+i*88,75,68,29);ctx.fillStyle="#171d1b";ctx.fillRect(base+46+i*88,79,60,21);ctx.fillStyle="#393e39"}ctx.fillStyle="#81755e";ctx.fillRect(base+37,65,ROOM-74,2)}
  if(z===1){for(var j=0;j<4;j++){var dx=base+55+j*112;ctx.fillStyle="#625b50";ctx.fillRect(dx,25,63,8);ctx.fillStyle="#252725";ctx.fillRect(dx+3,28,57,3);ctx.fillStyle="#a54f48";ctx.fillRect(dx+52,31,3,2)}ctx.fillStyle="#4f4941";ctx.fillRect(base+30,190,ROOM-60,3)}
  if(z===2){ctx.fillStyle="#4b514c";ctx.fillRect(base+34,26,ROOM-68,5);ctx.strokeStyle="#857862";for(var n=0;n<7;n++){ctx.beginPath();ctx.moveTo(base+53+n*61,31);ctx.lineTo(base+53+n*61,65+(n%3)*13);ctx.stroke()}ctx.fillStyle="#a14f49";ctx.globalAlpha=.5+Math.sin(t*.002)*.25;ctx.fillRect(base+236,48,5,5);ctx.globalAlpha=1}
  if(z===3){ctx.strokeStyle="#59635b";ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(base+35,43);ctx.lineTo(base+35,74);ctx.lineTo(base+470,74);ctx.lineTo(base+470,168);ctx.stroke();ctx.lineWidth=1;ctx.fillStyle="#383d38";for(var h=0;h<8;h++)ctx.fillRect(base+70+h*53,70,4,9)}
- if(z===4){ctx.fillStyle="#323838";for(var r=0;r<5;r++){ctx.fillRect(base+29+r*94,24,69,35);ctx.fillStyle="#141a1a";ctx.fillRect(base+33+r*94,28,61,27);ctx.fillStyle="#827866";for(var l=0;l<3;l++)ctx.fillRect(base+38+r*94,33+l*7,44+(l%2)*8,1);ctx.fillStyle="#323838"}}
+ if(z===4){ctx.fillStyle="#323838";for(var r=0;r<5;r++){ctx.fillRect(base+29+r*94,75,69,32);ctx.fillStyle="#141a1a";ctx.fillRect(base+33+r*94,79,61,24);ctx.fillStyle="#827866";for(var l=0;l<3;l++)ctx.fillRect(base+38+r*94,84+l*6,44+(l%2)*8,1);ctx.fillStyle="#323838"}}
  // толстые стены и две боковые двери в соседние секции
  ctx.fillStyle="#080b0b";ctx.fillRect(base+7,7,ROOM-14,12);ctx.fillRect(base+7,59,ROOM-14,12);ctx.fillRect(base+7,H-19,ROOM-14,12);
  ctx.fillStyle="#65645a";ctx.fillRect(base+10,18,ROOM-20,3);ctx.fillRect(base+10,68,ROOM-20,3);ctx.fillRect(base+10,H-21,ROOM-20,3);
  ctx.fillStyle="#080b0b";ctx.fillRect(base+7,18,12,52);ctx.fillRect(base+7,184,12,14);ctx.fillRect(base+ROOM-19,18,12,52);ctx.fillRect(base+ROOM-19,184,12,14);
  ctx.fillStyle="#111615";ctx.fillRect(base+5,70,17,57);ctx.fillRect(base+5,179,17,19);ctx.fillRect(base+ROOM-22,70,17,57);ctx.fillRect(base+ROOM-22,179,17,19);
  ctx.fillStyle="#9a5149";ctx.fillRect(base+ROOM-12,130,3,8);ctx.fillRect(base+9,130,3,8);
- rooms[z].forEach(function(o){var sx=o.x-cam;if(sx>-48&&sx<ROOM+48)drawTopObject(o,sx,o.y)});
+ rooms[z].forEach(function(o){var sx=o.x-cam;if(sx>-48&&sx<ROOM+48){ctx.save();ctx.translate(sx,o.y);ctx.scale(.88,.88);drawTopObject(o,0,0);ctx.restore()}});
  if(st.flags.lineRestored&&z===1&&!st.flags.silhouetteGone){var sil=base+433;ctx.fillStyle="#101414";ctx.fillRect(sil,108,8,19);ctx.fillRect(sil+1,102,6,7);ctx.fillStyle="#9a514966";ctx.fillRect(sil+2,104,2,2)}
 }
 function drawTopObject(o,x,y){
  // Верхний ракурс: читаемые силуэты, небольшие тени и один пиксельный источник света.
- ctx.fillStyle="#03050570";ctx.fillRect(x-17,y+9,34,4);
+ if(["window","clock","door","lift","list","pipes","mirror"].indexOf(o.type)<0){ctx.fillStyle="#03050570";ctx.fillRect(x-17,y+9,34,4)}
  var stone="#454a43",edge="#161b19",paper="#b8ad92",red="#a34f4d";
  switch(o.type){
  case"desk":ctx.fillStyle=edge;ctx.fillRect(x-22,y-13,44,30);ctx.fillStyle="#594f42";ctx.fillRect(x-20,y-12,40,25);ctx.fillStyle="#77705e";ctx.fillRect(x-15,y-8,17,12);ctx.fillStyle=paper;ctx.fillRect(x-13,y-7,13,9);ctx.fillStyle="#554e43";ctx.fillRect(x+7,y-6,9,11);ctx.fillStyle=red;ctx.fillRect(x+11,y-4,2,2);break;
@@ -292,7 +292,7 @@ function drawPlayer(){
  var fx=st.faceX||0,fy=st.faceY===undefined?-1:st.faceY,side=fx!==0,right=fx>0;
  var frame=moving?Math.floor(elapsed/210)%2:0;
  // компактный пиксельный силуэт: голова-маска, шапка, короткое пальто, тонкие конечности
- ctx.save();ctx.translate(sx,sy);ctx.scale(1/ROOM_SCALE,1);ctx.scale(.5,.5);
+ ctx.save();ctx.translate(sx,sy);ctx.scale(1/ROOM_SCALE,1);ctx.scale(.6,.6);
  ctx.fillStyle="#02040499";ctx.fillRect(-7,5,14,2);
  // ноги: два дискретных шага вместо быстрого дрожания пикселей
  ctx.fillStyle="#111619";
